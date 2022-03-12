@@ -27,23 +27,23 @@
 
     </style>
 
-    <title>Average Rating of Board Games Across the World</title>
+    <title>Team80</title>
 
 </head>
 
 
 <body>
     <!-- Add heading for the visualization -->
-    <h2>Average Rating of Board Games Across the World</h2>
+    <h2>Renewable Energy Replacement Geomap Visualization</h2>
     <!-- Create dropdown element here. Options should be added after reading in game file, they should not be created here.-->
-    Select Board Game <select id="gameDropdown"></select>
+    Select Plant Name <select id="gameDropdown"></select>
 
     <script>
         // enter code to define margin and dimensions for svg
         var margin = {top: 20, right: 10, bottom: 20, left: 10};
         var padding = 30;
-        var outerWidth = 960;
-        var outerHeight = 500;
+        var outerWidth = 1980;
+        var outerHeight = 1024;
         var width = outerWidth - padding;
         var height = outerHeight - padding;
 
@@ -70,65 +70,71 @@
         // For grading, set the name of functions for projection and path as "projection" and "path"
         // var projection = 
         // var path =
-        var projection = d3.geoNaturalEarth()
-        .translate([width/2, 220])
-        .scale([150]);
+        var projection = d3.geoNaturalEarth1()
+        .scale(width / 1.8 / Math.PI)
+        .rotate([0,0])
+        .center([0,0])
+        .translate([width/2, height/2])
+
         var path = d3.geoPath().projection(projection);
 
         // define any other global variables 
 
         Promise.all([
             // enter code to read files
-            d3.json("world_countries.json"),
-            d3.csv("ratings-by-country.csv")
+            d3.json("gz_2010_us_050_00_20m.json"),
+            d3.csv("dataset/global_power_plant_database_usa_solar.csv")
         ]).then(
             function(values) {
-                var world = values[0]
-                var ratings = values[1]
+                var usamap = values[0]
+                var plants = values[1]
                 
                 // initialize properites for each country
-                for(var i=0; i<world.features.length; i++) {
-                    world.features[i].properties.value_list = [];
-                    world.features[i].properties.game_list = [];
-                    world.features[i].properties.user_list = [];
+                for(var i=0; i<usamap.features.length; i++) {
+                    usamap.features[i].properties.name_list = [];
+                    usamap.features[i].properties.capa_list = [];
+                    usamap.features[i].properties.lat_list = [];
+                    usamap.features[i].properties.long_list = [];
 
-                    //console.log(world.features[i]);
+                    //console.log(usamap.features[i]);
                 }
 
-                for(var i=0; i<ratings.length; i++){
-                    var country = ratings[i].Country;
-                    var user = Number(ratings[i]["Number of Users"]);
-                    var rating = Number(ratings[i]["Average Rating"]);
+                for(var i=0; i<plants.length; i++){
+                    var name = plants[i].name;
+                    var capa = Number(plants[i]["capacity_mw"]);
+                    var lat = Number(plants[i]["latitude"]);
+                    var long = Number(plants[i]["longitude"]);
 
-                    for (var j = 0; j < world.features.length; j++) {
-                        var world_country = world.features[j].properties.name;
-                        if (country == world_country) {
-                            world.features[j].properties.value_list.push(rating)
-                            world.features[j].properties.game_list.push(ratings[i].Game)
-                            world.features[j].properties.user_list.push(user)
-                            break;
-                        }
-                    }
+                    // for (var j = 0; j < usamap.features.length; j++) {
+                    //     var usamap_country = usamap.features[j].properties.name;
+                    //     if (country == usamap_country) {
+                    //         usamap.features[j].properties.name_list.push(rating)
+                    //         usamap.features[j].properties.capa_list.push(plants[i].Game)
+                    //         usamap.features[j].properties.lat_list.push(user)
+                    //         usamap.features[j].properties.long_list.push(user)
+                    //         break;
+                    //     }
+                    // }
                 }
-                console.log(world)
-                ready(null, world, ratings);
+                //console.log(usamap)
+                ready(null, usamap, plants);
             }
             // enter code to call ready() with required arguments
         );
         
         // this function should be called once the data from files have been read
-        // world: topojson from world_countries.json
-        // gameData: data from ratings-by-country.csv
+        // usamap: topojson from usamap_countries.json
+        // plantdata: data from plants-by-country.csv
         
-        function ready(error, world, gameData) {
-            // enter code to extract all unique games from gameData
+        function ready(error, usamap, plantdata) {
+            // enter code to extract all unique games from plantdata
 
-            game_names = d3.map(gameData, function(d){return d.Game}).keys()
-            game_names = game_names.sort(d3.ascending);
+            plant_names = d3.map(plantdata, function(d){return d.name}).keys()
+            plant_names = plant_names.sort(d3.ascending);
             
             d3.select("#gameDropdown")
             .selectAll("option")
-            .data(game_names)
+            .data(plant_names)
             .enter()
             .append("option")
             .text(function (d) { return d; })
@@ -141,42 +147,42 @@
 
             d3.select("#gameDropdown").on("change", function(d) {
                 var selectedGame = d3.select(this).property("value")
-                createMapAndLegend(world, gameData, selectedGame)
+                createMapAndLegend(usamap, plantdata, selectedGame)
             })
             var selectedGame = "6 nimmt!";
-            createMapAndLegend(world, gameData, selectedGame)
+            createMapAndLegend(usamap, plantdata, selectedGame)
         }
 
-        // this function should create a Choropleth and legend using the world and gameData arguments for a selectedGame
+        // this function should create a Choropleth and legend using the usamap and plantdata arguments for a selectedGame
         // also use this function to update Choropleth and legend when a different game is selected from the dropdown
-        function createMapAndLegend(world, gameData, selectedGame){ 
+        function createMapAndLegend(usamap, plantdata, selectedGame){ 
             
             d3.select("#countries").remove();
             d3.select("#tooltip").remove();
                         
             // Process Rating Data
-            filtered_ratings = gameData.filter(function(d) {
+            filtered_plants = plantdata.filter(function(d) {
                 return d.Game == selectedGame;
             })
-            ratings_list = filtered_ratings.map(function(d) {
+            plants_list = filtered_plants.map(function(d) {
                return d["Average Rating"]
             });
 
-            sorted_ratings_list = ratings_list.sort(function(a,b) { return a - b;});
+            sorted_plants_list = plants_list.sort(function(a,b) { return a - b;});
 
-            console.log(ratings_list);
-            console.log(d3.quantile(sorted_ratings_list, 0.0));
-            console.log(d3.quantile(sorted_ratings_list, 0.25));
-            console.log(d3.quantile(sorted_ratings_list, 0.5));
-            console.log(d3.quantile(sorted_ratings_list, 0.75));
-            console.log(d3.quantile(sorted_ratings_list, 1.0));
+            console.log(plants_list);
+            console.log(d3.quantile(sorted_plants_list, 0.0));
+            console.log(d3.quantile(sorted_plants_list, 0.25));
+            console.log(d3.quantile(sorted_plants_list, 0.5));
+            console.log(d3.quantile(sorted_plants_list, 0.75));
+            console.log(d3.quantile(sorted_plants_list, 1.0));
             
             color_threshold_list = [
-                d3.quantile(sorted_ratings_list, 0.0), 
-                d3.quantile(sorted_ratings_list, 0.25), 
-                d3.quantile(sorted_ratings_list, 0.5), 
-                d3.quantile(sorted_ratings_list, 0.75), 
-                d3.quantile(sorted_ratings_list, 1.0)
+                d3.quantile(sorted_plants_list, 0.0), 
+                d3.quantile(sorted_plants_list, 0.25), 
+                d3.quantile(sorted_plants_list, 0.5), 
+                d3.quantile(sorted_plants_list, 0.75), 
+                d3.quantile(sorted_plants_list, 1.0)
                 ];
 
             label_color_legend = [
@@ -185,21 +191,22 @@
                 String(color_threshold_list[2]) + " to " + String(color_threshold_list[3]),
                 String(color_threshold_list[3]) + " to " + String(color_threshold_list[4])
             ]
-            //console.log(sorted_ratings_list);
+            //console.log(sorted_plants_list);
             console.log(color_threshold_list);
 
             // Get quantiles for the average_rating values
-            colorScale.domain(color_threshold_list.slice(0,4));
+            colorScale.domain(color_threshold_list.slice(0,5));
             console.log(colorScale.domain());
             // console.log(colorScale.range());
 
             // Draw the map
             var countries = svg.append("g")
-                .attr("id", "countries");
+                .attr("id", "countries")
+                .call(d3.zoom().on("zoom", zoomed))
 
             countries
                 .selectAll("path")
-                .data(world.features)
+                .data(usamap.features)
                 .enter().append("path")
                     .attr("class", "country")
                     .attr("d", path)
@@ -214,8 +221,9 @@
                             //console.log(d.properties["name"] + " game index is " + idx + " value is " + d.properties["value_list"][idx]);
                         }
                         
-                        d.total = d.properties.value_list[idx] || 0;
-                        console.log(d.properties.name +  ' value ' +  d.properties["value_list"][idx] + ' : d total is ' + d.total + ' scale is ' + colorScale(d.total+0.01));
+                        // d.total = d.properties.value_list[idx] || 0;
+                        d.total = 1;
+                        //console.log(d.properties.name +  ' value ' +  d.properties["value_list"][idx] + ' : d total is ' + d.total + ' scale is ' + colorScale(d.total+0.01));
 
                         // Set the color
                         if (d.total) { return colorScale(d.total); }
@@ -276,6 +284,11 @@
                 .attr("y",height-20)
                 .attr("font-size", "12px")                  
         }
+        
+        function zoomed() {
+            d3.select("#countries").attr("transform", d3.event.transform)
+        }
+    
     </script>
 
 </body>
