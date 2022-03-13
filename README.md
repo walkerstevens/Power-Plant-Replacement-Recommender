@@ -25,10 +25,12 @@
 - Manual at http://team80.ohmyedu.com:8888/files/doc/43156.pdf
 
 * Existing Powerplants Data - tmy2020.h5
+ * http://team80.ohmyedu.com:8888/edit/dataset/global_power_plant_database_usa_solar.csv
+ * http://team80.ohmyedu.com:8888/edit/dataset/global_power_plant_database_usa_wind.csv
 
 * US Geojsons
-* * States Level: 
-* * County Level: 
+ * States Level: http://team80.ohmyedu.com:8888/edit/gz_2010_us_040_00_20m.json
+ * County Level: http://team80.ohmyedu.com:8888/edit/gz_2010_us_050_00_20m.json
 
 # Playing around datasets
 See http://team80.ohmyedu.com:8888/notebooks/htpyd_example.ipynb
