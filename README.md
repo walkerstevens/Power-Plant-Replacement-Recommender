@@ -25,8 +25,8 @@
 - Manual at http://team80.ohmyedu.com:8888/files/doc/43156.pdf
 
 ## Existing Powerplants Data - from team drive, filtered for only USA & solar/wind type
- - http://team80.ohmyedu.com:8000/dataset/global_power_plant_database_usa_solar.csv
- - http://team80.ohmyedu.com:8000/dataset/global_power_plant_database_usa_wind.csv
+ - http://team80.ohmyedu.com:8888/edit/dataset/global_power_plant_database_usa_solar.csv
+ - http://team80.ohmyedu.com:8888/edit/dataset/global_power_plant_database_usa_wind.csv
 
 ## US Geojsons
  - States Level: http://team80.ohmyedu.com:8000/gz_2010_us_040_00_20m.json
