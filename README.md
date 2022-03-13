@@ -5,7 +5,7 @@
 * Jupyter Notebook
   * Set for Access from Public
 * D3 Skeleton Page
-  * Originated from HW2-Q5, updated geojsons and selection menu as a starting point.
+  * Starting from HW2-Q5, updated world map to USA map, and game selection to existing powerplant selection.
 * Datasets
   * Weather
   * Powerplants
