@@ -2,6 +2,7 @@
 * Shared VM
   * Ubuntu 20 VM with xrdp running
   * VM Spec: Standard B4ms (4 vcpus, 16 GiB memory)
+  * 1TB data volume is mounted at /mnt/data (Standard SSD)
 * Jupyter Notebook
   * Set for Access from Public
 * D3 Skeleton Page
@@ -11,13 +12,10 @@
   * Powerplants
   * GeoJson
 
-
 # Accessing Shared VM from Azure
-* RDP to team80.ohmyedu.com 
-* SSH to team80.ohmyedu.com:22 
+* RDP to team80.ohmyedu.com:3389
+* SSH to team80@team80.ohmyedu.com:22
 * ID/PW: team80/team80!23456
-
-* 1TB data volume is mounted at /mnt/data (Standard SSD)
 
 # Accessing Jupyter Notebook
 * http://team80.ohmyedu.com:8888
