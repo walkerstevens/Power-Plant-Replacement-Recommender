@@ -21,7 +21,7 @@
 
 # Datasets
 ## Weather Data - tmy2020.h5
-- Downloaded from https://data.openei.org/s3_viewer?bucket=nrel-pds-nsrdb&prefix=v3%2Ftmy%2F\n
+- Downloaded from https://data.openei.org/s3_viewer?bucket=nrel-pds-nsrdb&prefix=v3%2Ftmy%2F
 - Manual at http://team80.ohmyedu.com:8888/files/doc/43156.pdf
 
 ## Existing Powerplants Data - tmy2020.h5
