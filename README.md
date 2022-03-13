@@ -1,7 +1,7 @@
 # TEAM80 Workspace
 * Shared VM
- * Ubuntu 20 VM with xrdp running
- * VM Spec: Standard B4ms (4 vcpus, 16 GiB memory)
+  * Ubuntu 20 VM with xrdp running
+  * VM Spec: Standard B4ms (4 vcpus, 16 GiB memory)
 * Jupyter Notebook
  * Set for Access from Public
 * D3 Skeleton Page
