@@ -3,13 +3,13 @@
   * Ubuntu 20 VM with xrdp running
   * VM Spec: Standard B4ms (4 vcpus, 16 GiB memory)
 * Jupyter Notebook
- * Set for Access from Public
+  * Set for Access from Public
 * D3 Skeleton Page
- * Originated from HW2-Q5, updated geojsons and selection menu as a starting point.
+  * Originated from HW2-Q5, updated geojsons and selection menu as a starting point.
 * Datasets
- * Weather
- * Powerplants
- * GeoJson
+  * Weather
+  * Powerplants
+  * GeoJson
 
 
 # Accessing Shared VM from Azure
