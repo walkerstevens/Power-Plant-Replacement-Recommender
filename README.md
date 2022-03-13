@@ -1,16 +1,23 @@
 # TEAM80 Workspace
 * Shared VM
+ * Ubuntu 20 VM with xrdp running
+ * VM Spec: Standard B4ms (4 vcpus, 16 GiB memory)
 * Jupyter Notebook
+ * Set for Access from Public
 * D3 Skeleton Page
+ * Originated from HW2-Q5, updated geojsons and selection menu as a starting point.
 * Datasets
-* API Manuals & Tips* 
+ * Weather
+ * Powerplants
+ * GeoJson
 
 
 # Accessing Shared VM from Azure
-* RDP to team80.ohmyedu.com (Ubuntu 20 VM with xrdp running)
+* RDP to team80.ohmyedu.com 
+* SSH to team80.ohmyedu.com:22 
 * ID/PW: team80/team80!23456
-* VM Spec: Standard B4ms (4 vcpus, 16 GiB memory)
-* 1TB data volume is mounted at /dev/data (Standard SSD)
+
+* 1TB data volume is mounted at /mnt/data (Standard SSD)
 
 # Accessing Jupyter Notebook
 * http://team80.ohmyedu.com:8888
