@@ -1,33 +1,19 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
+
 <head>
-    <!-- add title -->
+    <!-- Title -->
+    <title>Team80</title>
     
-    <!-- import required libraries here -->
+    <!-- Import required libraries -->
     <script type="text/javascript" src="../lib/d3.v5.min.js"></script>
     <script type="text/javascript" src="../lib/d3-dsv.min.js"></script>
     <script src="lib/d3-geo-projection.v2.min.js"></script>
     <script src="lib/d3-legend.min.js"></script>
     <script src="lib/d3-tip.min.js"></script>
-    <style>
-        div.tooltip {
-            position: absolute;
-            text-align: center;
-            width: 200px;
-            height: 100px;
-            padding: 5px;
-            font: 10px;
-            background-color: grey;
-            border: 0px;
-            pointer-events: none;
-            opacity: 0;    
-            font-weight: bold;
-            color:white;
-        }
-
-    </style>
-
-    <title>Team80</title>
+    
+    <!-- CSS styles -->
+    <link href="stylesheet.css" rel="stylesheet">
 
 </head>
 
@@ -35,262 +21,12 @@
 <body>
     <!-- Add heading for the visualization -->
     <h2>Renewable Energy Replacement Geomap Visualization</h2>
-    <!-- Create dropdown element here. Options should be added after reading in game file, they should not be created here.-->
-    Select Plant Name <select id="gameDropdown"></select>
-
-    <script>
-        // enter code to define margin and dimensions for svg
-        var margin = {top: 20, right: 10, bottom: 20, left: 10};
-        var padding = 30;
-        var outerWidth = 1980;
-        var outerHeight = 1024;
-        var width = outerWidth - padding;
-        var height = outerHeight - padding;
-
-        // enter code to create svg
-        var svg = d3.select("body").append("svg")
-        .attr("width", outerWidth)
-        .attr("height", outerHeight)
-        .attr("id", "choropleth") 
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-
-        // var countries = svg.append("g")
-        // .attr("id", "countries");
-        
-        // enter code to create color scale
-        var data = d3.map();
-        var colorScheme = d3.schemeReds[4];
-        colorScheme.unshift("grey");
-        console.log(colorScheme);
-        var colorScale = d3.scaleThreshold()
-            .range(colorScheme);
-        
-       
-        // enter code to define projection and path required for Choropleth
-        // For grading, set the name of functions for projection and path as "projection" and "path"
-        // var projection = 
-        // var path =
-        var projection = d3.geoNaturalEarth1()
-        .scale(width / 1.8 / Math.PI)
-        .rotate([0,0])
-        .center([0,0])
-        .translate([width/2, height/2])
-
-        var path = d3.geoPath().projection(projection);
-
-        // define any other global variables 
-
-        Promise.all([
-            // enter code to read files
-            d3.json("gz_2010_us_050_00_20m.json"),
-            d3.csv("dataset/global_power_plant_database_usa_solar.csv")
-        ]).then(
-            function(values) {
-                var usamap = values[0]
-                var plants = values[1]
-                
-                // initialize properites for each country
-                for(var i=0; i<usamap.features.length; i++) {
-                    usamap.features[i].properties.name_list = [];
-                    usamap.features[i].properties.capa_list = [];
-                    usamap.features[i].properties.lat_list = [];
-                    usamap.features[i].properties.long_list = [];
-
-                    //console.log(usamap.features[i]);
-                }
-
-                for(var i=0; i<plants.length; i++){
-                    var name = plants[i].name;
-                    var capa = Number(plants[i]["capacity_mw"]);
-                    var lat = Number(plants[i]["latitude"]);
-                    var long = Number(plants[i]["longitude"]);
-
-                    // for (var j = 0; j < usamap.features.length; j++) {
-                    //     var usamap_country = usamap.features[j].properties.name;
-                    //     if (country == usamap_country) {
-                    //         usamap.features[j].properties.name_list.push(rating)
-                    //         usamap.features[j].properties.capa_list.push(plants[i].Game)
-                    //         usamap.features[j].properties.lat_list.push(user)
-                    //         usamap.features[j].properties.long_list.push(user)
-                    //         break;
-                    //     }
-                    // }
-                }
-                //console.log(usamap)
-                ready(null, usamap, plants);
-            }
-            // enter code to call ready() with required arguments
-        );
-        
-        // this function should be called once the data from files have been read
-        // usamap: topojson from usamap_countries.json
-        // plantdata: data from plants-by-country.csv
-        
-        function ready(error, usamap, plantdata) {
-            // enter code to extract all unique games from plantdata
-
-            plant_names = d3.map(plantdata, function(d){return d.name}).keys()
-            plant_names = plant_names.sort(d3.ascending);
-            
-            d3.select("#gameDropdown")
-            .selectAll("option")
-            .data(plant_names)
-            .enter()
-            .append("option")
-            .text(function (d) { return d; })
-            .attr("value", function (d) { return d; })
-
-            // create Choropleth with default option. Call createMapAndLegend() with required arguments. 
-            if (error) throw error;
-
-            //console.log(error);
-
-            d3.select("#gameDropdown").on("change", function(d) {
-                var selectedGame = d3.select(this).property("value")
-                createMapAndLegend(usamap, plantdata, selectedGame)
-            })
-            var selectedGame = "6 nimmt!";
-            createMapAndLegend(usamap, plantdata, selectedGame)
-        }
-
-        // this function should create a Choropleth and legend using the usamap and plantdata arguments for a selectedGame
-        // also use this function to update Choropleth and legend when a different game is selected from the dropdown
-        function createMapAndLegend(usamap, plantdata, selectedGame){ 
-            
-            d3.select("#countries").remove();
-            d3.select("#tooltip").remove();
-                        
-            // Process Rating Data
-            filtered_plants = plantdata.filter(function(d) {
-                return d.Game == selectedGame;
-            })
-            plants_list = filtered_plants.map(function(d) {
-               return d["Average Rating"]
-            });
-
-            sorted_plants_list = plants_list.sort(function(a,b) { return a - b;});
-
-            console.log(plants_list);
-            console.log(d3.quantile(sorted_plants_list, 0.0));
-            console.log(d3.quantile(sorted_plants_list, 0.25));
-            console.log(d3.quantile(sorted_plants_list, 0.5));
-            console.log(d3.quantile(sorted_plants_list, 0.75));
-            console.log(d3.quantile(sorted_plants_list, 1.0));
-            
-            color_threshold_list = [
-                d3.quantile(sorted_plants_list, 0.0), 
-                d3.quantile(sorted_plants_list, 0.25), 
-                d3.quantile(sorted_plants_list, 0.5), 
-                d3.quantile(sorted_plants_list, 0.75), 
-                d3.quantile(sorted_plants_list, 1.0)
-                ];
-
-            label_color_legend = [
-                String(color_threshold_list[0]) + " to " + String(color_threshold_list[1]),
-                String(color_threshold_list[1]) + " to " + String(color_threshold_list[2]),
-                String(color_threshold_list[2]) + " to " + String(color_threshold_list[3]),
-                String(color_threshold_list[3]) + " to " + String(color_threshold_list[4])
-            ]
-            //console.log(sorted_plants_list);
-            console.log(color_threshold_list);
-
-            // Get quantiles for the average_rating values
-            colorScale.domain(color_threshold_list.slice(0,5));
-            console.log(colorScale.domain());
-            // console.log(colorScale.range());
-
-            // Draw the map
-            var countries = svg.append("g")
-                .attr("id", "countries")
-                .call(d3.zoom().on("zoom", zoomed))
-
-            countries
-                .selectAll("path")
-                .data(usamap.features)
-                .enter().append("path")
-                    .attr("class", "country")
-                    .attr("d", path)
-                    .attr("fill", function (d){
-                        // Pull data for this country
-                        //console.log(d.properties);
-                        //console.log(d.properties["name"] + " : " + d.properties["game_list"]);
-                        idx = -1;
-                        if (d.properties["game_list"]) {
-                            //console.log(d.properties["game_list"]);
-                            idx = d.properties["game_list"].indexOf(selectedGame);
-                            //console.log(d.properties["name"] + " game index is " + idx + " value is " + d.properties["value_list"][idx]);
-                        }
-                        
-                        // d.total = d.properties.value_list[idx] || 0;
-                        d.total = 1;
-                        //console.log(d.properties.name +  ' value ' +  d.properties["value_list"][idx] + ' : d total is ' + d.total + ' scale is ' + colorScale(d.total+0.01));
-
-                        // Set the color
-                        if (d.total) { return colorScale(d.total); }
-                        else {return "grey"; }
-                    })
-                    .attr("stroke", "white")
-                    .attr("stroke-width", "0.5")
-                    .on("mouseover", function(d) {
-                        country_name = d.properties.name;
-                        if (d.properties.game_list.includes(selectedGame)) {
-                            for (var i = 0; i < d.properties.game_list.length; i++) {
-                                if (d.properties.game_list[i] == selectedGame) {
-                                    avg_rating = d.properties.value_list[i];
-                                    num_users = d.properties.user_list[i];
-                                    break;
-                                }
-                            }
-                        } else {
-                            avg_rating = "N/A";
-                            num_users = "N/A";
-                        } 
-                        tooltip.transition().duration(200).style("opacity", 1);
-                        tooltip.html(
-                            "Country: " + country_name + "<br/>"
-                            + "Game: " + selectedGame + "<br/>"
-                            + "Avg Rating: " + avg_rating + "<br/>"
-                            + "Number of Users: " + num_users
-                            ).style("left", (d3.event.pageX)+ "px")
-                            .style("top", (d3.event.pageY + 30) +"px");
-                        })
-                    .on("mouseout", function(d){
-                        tooltip.transition().duration(500).style("opacity", 0);
-                    })
-
-            var g = svg.append("g")
-                .attr("id", "legend")
-                .attr("class", "legendThreshold")
-                .attr("transform", "translate(" + 800 + ",20)");
-            
-            var legend = d3.legendColor()
-                .labels(label_color_legend)
-                .shapePadding(4)
-                .scale(colorScale);
-
-            svg.select(".legendThreshold")
-                .call(legend);
-
-            // enter code to define tooltip
-            var tooltip = d3.select("body").append("div")
-            .attr("id", "tooltip")
-            .attr("class", "tooltip");
-
-            // credit
-            var texttitle = svg.append("text")
-                .text("ymyung3")
-                .attr("id", "credit")
-                .attr("x", width/2)
-                .attr("y",height-20)
-                .attr("font-size", "12px")                  
-        }
-        
-        function zoomed() {
-            d3.select("#countries").attr("transform", d3.event.transform)
-        }
     
-    </script>
+    <!-- Add dropdown list for selecting power plant -->
+    Select Fuel Type <select id="plantDropdown"></select>
+    
+    <!-- Add dropdown list for selecting power plant -->
+    <script type="text/javascript" src="../visualization.js"></script>
 
 </body>
 
-</html>
