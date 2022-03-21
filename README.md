@@ -1,42 +1,27 @@
-# TEAM80 Workspace
-* Shared VM
-  * Ubuntu 20 VM with xrdp running
-  * VM Spec: Standard B4ms (4 vcpus, 16 GiB memory)
-  * 1TB data volume is mounted at /mnt/data (Standard SSD)
-* Jupyter Notebook
-  * Set for Access from Public
-* D3 Skeleton Page
-  * Starting from HW2-Q5, updated world map to USA map, and game selection to existing powerplant selection.
-* Datasets
-  * Weather
-  * Powerplants
-  * GeoJson
+# Team80Map
 
-# Accessing Shared VM from Azure
-* RDP to team80.ohmyedu.com:3389
-* SSH to team80@team80.ohmyedu.com:22
-* ID/PW: team80/team80!23456
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.3.0.
 
-# Accessing Jupyter Notebook
-* http://team80.ohmyedu.com:8888
-* ID/PW: team80/team80!23456
+## Development server
 
-# D3 Visualizaiton Skeleton Page
-* http://team80.ohmyedu.com:8000/choropleth.html
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-# Datasets
-## Weather Data - tmy2020.h5
-- Overview: https://nsrdb.nrel.gov/data-sets/tmy
-- Year 2020 Downloaded from https://data.openei.org/s3_viewer?bucket=nrel-pds-nsrdb&prefix=v3%2Ftmy%2F
-- Manual at http://team80.ohmyedu.com:8888/files/doc/43156.pdf
+## Code scaffolding
 
-## Existing Powerplants Data - from team drive, filtered for only USA & solar/wind type
- - http://team80.ohmyedu.com:8888/edit/dataset/global_power_plant_database_usa_solar.csv
- - http://team80.ohmyedu.com:8888/edit/dataset/global_power_plant_database_usa_wind.csv
+Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-## US Geojsons
- - States Level: http://team80.ohmyedu.com:8000/gz_2010_us_040_00_20m.json
- - County Level: http://team80.ohmyedu.com:8000/gz_2010_us_050_00_20m.json
+## Build
 
-# Playing around datasets
-See http://team80.ohmyedu.com:8888/notebooks/htpyd_example.ipynb
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+
+## Running unit tests
+
+Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+
+## Running end-to-end tests
+
+Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+
+## Further help
+
+To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.

@@ -1,0 +1,29 @@
+/* You can add global styles to this file, and also import other style files */
+
+html {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+}
+
+app-root {
+    width: 100%;
+    height: 100%;
+}
+
+.marker {
+    background-image: url('assets/map-marker-svgrepo-com.svg');
+    background-size: cover;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
