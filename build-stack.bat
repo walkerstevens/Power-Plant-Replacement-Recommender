@@ -13,7 +13,8 @@ echo.
 echo =========== 
 echo Uploading to s3 bucket...
 call ng build --progress --aot
-aws s3 sync dist/team80-map s3://%bucketName%
+aws s3 sync dist/team80-map s3://%bucketName% --exclude `"*.js`" --delete
+aws s3 sync dist/team80-map s3://%bucketName% --exclude `"*`" --include `"*.js`" --content-type application/javascript
 echo Uploading to s3 bucket complete...
 
 echo.
