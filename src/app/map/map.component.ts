@@ -112,66 +112,8 @@ export class MapComponent {
         'features': features
       },
       cluster: true,
-      clusterMaxZoom: 30, // Max zoom to cluster points on
+      clusterMaxZoom: 2, // Max zoom to cluster points on
       clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
-    });
-
-    this.map.addLayer({
-      id: 'clusters',
-      type: 'circle',
-      source: 'powerplants',
-      filter: ['has', 'point_count'],
-      paint: {
-        // Use step expressions (https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions-step)
-        // with three steps to implement three types of circles:
-        //   * Blue, 20px circles when point count is less than 100
-        //   * Yellow, 30px circles when point count is between 100 and 750
-        //   * Pink, 40px circles when point count is greater than or equal to 750
-        'circle-color': [
-          'step',
-          ['get', 'point_count'],
-          '#51bbd6',
-          100,
-          '#f1f075',
-          750,
-          '#f28cb1'
-        ],
-        'circle-radius': [
-          'step',
-          ['get', 'point_count'],
-          20,
-          100,
-          30,
-          750,
-          40
-        ]
-      }
-    });
-
-    this.map.addLayer({
-      id: 'cluster-count',
-      type: 'symbol',
-      source: 'powerplants',
-      filter: ['has', 'point_count'],
-      layout: {
-        'text-field': '{point_count_abbreviated}',
-        'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-        'text-size': 12
-      }
-    });
-
-    this.map.addLayer({
-      id: 'unclustered-text',
-      type: 'symbol',
-      source: 'powerplants',
-      filter: ['!', ['has', 'point_count']],
-      layout: {
-        'text-field': ['get', 'title'],
-        'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-        'text-size': 12,
-        'text-offset': [0, 1.25],
-        'text-anchor': 'top'
-      }
     });
 
     this.map.addLayer({
@@ -188,9 +130,9 @@ export class MapComponent {
         //  100, '#3182bd',
         //],
         'circle-color': '#51bbd6',
-        'circle-radius': 10,
-        //'circle-stroke-width': 1,
-        //'circle-stroke-color': '#fff'
+        'circle-radius': 5,
+        'circle-stroke-width': 1,
+        'circle-stroke-color': '#fff'
       }
     });
   }
