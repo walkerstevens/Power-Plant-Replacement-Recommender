@@ -1,0 +1,86 @@
+Field,Element,Unit or Range,Resolution,Description
+1,Date,MM/DD/YYYY,--,Date of data record
+2,Time,HH:MM,--,Time of data record (local standard time)
+3,Hourly extraterrestrial radiation on a horizontal surface,Watt-hour per square meter,1 Wh/m2,"Amount of solar radiation received on a horizontal surface at the top of the atmosphere during the 60-minute period
+ ending at the timestamp"
+4,Hourly extraterrestrial radiation normal to the sun,Watt-hour per square meter,1 Wh/m2,"Amount of solar radiation received on a surface normal to the sun at the top of the atmosphere during the 60-
+ minute period ending at the timestamp"
+5,Global horizontal irradiance,Watt-hour per square meter,1 Wh/m2,"Total amount of direct and diffuse solar radiation received on a horizontal surface during
+ the 60-minute period ending at the timestamp"
+6,Global horizontal irradiance source flag,1-2,--,See Table 1-4
+7,Global horizontal irradiance uncertainty,Percent,1%,"Uncertainty based on random and bias error estimates – see
+ NSRDB User’s Manual (Wilcox, 2007b)"
+8,Direct normal irradiance,Watt-hour per square meter,1 Wh/m2,Amount of solar radiation (modeled) received in a collimated beam on a surface normal to the sun during the 60- minute period ending at the timestamp
+9,"Direct normal irradiance source
+ flag",1-2,--,See table 1-4
+10,Direct normal irradiance uncertainty,Percent,1%,"Uncertainty based on random and bias error estimates – see NSRDB User’s Manual (Wilcox, 2007b)"
+11,Diffuse horizontal irradiance,Watt-hour per square meter,1 Wh/m2,"Amount of solar radiation received from the sky (excluding the solar disk) on a horizontal surface during the 60-minute
+ period ending at the timestamp"
+12,Diffuse horizontal irradiance source flag,1-2,--,See Table 1-4
+13,Diffuse horizontal irradiance uncertainty,Percent,1%,"Uncertainty based on random and bias error estimates – see NSRDB User’s Manual (Wilcox,
+ 2007b)"
+14,Global horizontal illuminance,Lux,100 lx,Average total amount of direct and diffuse illuminance received on a horizontal surface during the 60-minute period ending at the timestamp
+15,"Global horizontal
+ illuminance source flag",1-2,--,See Table 1-4
+16,Global horizontal illuminance uncertainty,Percent,1%,Uncertainty based on random and bias error estimates – see section 2.10)
+17,Direct normal illuminance,Lux,100 lx,"Average amount of direct normal illuminance received within a 5.7° field of view centered on the sun during 60-
+ minute period ending at the timestamp"
+18,Direct normal illuminance source flag,1-2,--,See Table 1-4
+19,"Direct normal
+ illuminance uncertainty",Percent,1%,"Uncertainty based on random
+ and bias error estimates – see section 2.10)"
+20,Diffuse horizontal illuminance,Lux,100 lx,Average amount of illuminance received from the sky (excluding the solar disk) on a horizontal surface during the 60-minute period ending at the timestamp
+21,"Diffuse horizontal
+ illuminance source flag",1-2,--,See Table 1-4
+22,Diffuse horizontal illuminance uncertainty,Percent,1%,Uncertainty based on random and bias error estimates – see section 2.10)
+23,Zenith luminance,Candela per square meter,10 cd/m2,Average amount of luminance at the sky's zenith during the 60- minute period ending at the timestamp
+24,Zenith luminance source flag,1-2,--,See Table 1-4
+25,Zenith luminance uncertainty,Percent,1%,Uncertainty based on random and bias error estimates – see section 2.10)
+26,Total sky cover,Tenths of sky,1 tenth,Amount of sky dome covered by clouds or obscuring phenomena at the time indicated
+27,Total sky cover flag (source),,,See Table 1-5
+28,Total sky cover flag (uncertainty),,,See Table 1-6
+29,Opaque sky cover,Tenths of sky,1 tenth,Amount of sky dome covered by clouds or obscuring phenomena that prevent observing the sky or higher cloud layers at the time indicated
+30,Opaque sky cover flag (source),,,See Table 1-5
+31,Opaque sky cover flag (uncertainty),,,See Table 1-6
+32,Dry-bulb temperature,Degree C,0.1°,Dry-bulb temperature at the time indicated
+33,Dry-bulb temperature flag (source),,,See Table 1-5
+34,Dry-bulb temperature flag (uncertainty),,,See Table 1-6
+35,Dew-point temperature,Degree C,0.1°,Dew-point temperature at the time indicated
+36,"Dew-point temperature flag
+ (source)",,,See Table 1-5
+37,Dew-point temperature flag (uncertainty),,,See Table 1-6
+38,Relative humidity,Percent,1%,Relative humidity at the time indicated
+39,Relative humidity flag (source),,,See Table 1-5
+40,Relative humidity flag (uncertainty),,,See Table 1-6
+41,Station pressure,Millibar,1 mbar,Station pressure at the time indicated
+42,Station pressure flag (source),,,See Table 1-5
+43,Station pressure flag (uncertainty),,,See Table 1-6
+44,Wind direction,"Degrees from north (360° =
+ north; 0° = undefined, calm)",10°,Wind direction at the time indicated
+45,"Wind direction flag
+ (source)",,,See Table 1-5
+46,Wind direction flag (uncertainty),,,See Table 1-6
+47,Wind speed,Meter/second,0.1 m/s,Wind speed at the time indicated
+48,Wind speed flag (source),,,See Table 1-5
+49,Wind speed flag (uncertainty),,,See Table 1-6
+50,Horizontal visibility,Meter*,1 m,Distance to discernable remote objects at the time indicated (7777 = unlimited)
+51,Horizontal visibility flag (source),,,See Table 1-5
+52,Horizontal visibility flag (uncertainty),,,
+53,Ceiling height,Meter*,1 m,Height of the cloud base above local terrain (77777 = unlimited)
+54,Ceiling height flag (source),,,See Table 1-5
+55,Ceiling height flag (uncertainty),,,See Table 1-6
+56,Precipitable water,Centimeter,0.1 cm,The total precipitable water contained in a column of unit cross section extending from the earth's surface to the top of the atmosphere
+57,Precipitable water flag (source),,,See Table 1-5
+58,Precipitable water flag (uncertainty),,,See Table 1-6
+59,"Aerosol optical depth, broadband",[unitless],0.001,The broadband aerosol optical depth per unit of air mass due to extinction by the aerosol component of the atmosphere
+60,"Aerosol optical
+ depth, broadband flag (source)",,,See Table 1-5
+61,"Aerosol optical depth, broadband flag (uncertainty)",,,See Table 1-6
+62,Albedo,[unitless],0.01,The ratio of reflected solar irradiance to global horizontal irradiance
+63,Albedo flag (source),,,See Table 1-5
+64,Albedo flag (uncertainty),,,See Table 1-6
+65,Liquid precipitation depth,Millimeter*,1 mm,"The amount of liquid precipitation observed at the indicated time for the period indicated in the liquid
+ precipitation quantity field"
+66,Liquid precipitation quantity,Hour*,1 hr,The period of accumulation for the liquid precipitation depth field
+67,Liquid precipitation depth flag (source),,,See Table 1-5
+68,Liquid precipitation depth flag (uncertainty),,,See Table 1-6

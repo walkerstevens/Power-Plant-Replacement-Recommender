@@ -1,0 +1,17 @@
+[I 2022-03-10 07:29:45.412 LabApp] JupyterLab extension loaded from /home/team80/.local/lib/python3.8/site-packages/jupyterlab
+[I 2022-03-10 07:29:45.413 LabApp] JupyterLab application directory is /home/team80/.local/share/jupyter/lab
+[I 07:29:45.417 NotebookApp] Serving notebooks from local directory: /home/team80/Projects/team80
+[I 07:29:45.417 NotebookApp] Jupyter Notebook 6.4.8 is running at:
+[I 07:29:45.417 NotebookApp] http://localhost:8888/?token=d9aa02006657b95c06d7fa1d0842d2439a5c732cfc85b280
+[I 07:29:45.417 NotebookApp]  or http://127.0.0.1:8888/?token=d9aa02006657b95c06d7fa1d0842d2439a5c732cfc85b280
+[I 07:29:45.417 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[C 07:29:45.455 NotebookApp] 
+    
+    To access the notebook, open this file in a browser:
+        file:///home/team80/.local/share/jupyter/runtime/nbserver-9874-open.html
+    Or copy and paste one of these URLs:
+        http://localhost:8888/?token=d9aa02006657b95c06d7fa1d0842d2439a5c732cfc85b280
+     or http://127.0.0.1:8888/?token=d9aa02006657b95c06d7fa1d0842d2439a5c732cfc85b280
+[C 10:00:33.882 NotebookApp] received signal 15, stopping
+[I 10:00:33.883 NotebookApp] Shutting down 0 kernels
+[I 10:00:33.883 NotebookApp] Shutting down 0 terminals
