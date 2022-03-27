@@ -3,7 +3,6 @@ import { MainServiceService } from '../main-service.service';
 import { MatSelect } from '@angular/material/select';
 import { MatOption } from '@angular/material/core';
 import { FormControl } from '@angular/forms';
-import { map } from 'rxjs';
 
 @Component({
   selector: 'app-sidebar',

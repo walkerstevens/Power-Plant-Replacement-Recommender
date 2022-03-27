@@ -9,7 +9,10 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox'
+import { MatSidenavModule } from '@angular/material/sidenav'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider'
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { MapComponent } from './map/map.component';
 import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
@@ -30,6 +33,9 @@ import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
     MatFormFieldModule,
     MatSelectModule,
     MatCheckboxModule,
+    MatSidenavModule,
+    MatCardModule,
+    MatDividerModule,
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,

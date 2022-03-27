@@ -1,11 +1,27 @@
 :host {
-    background-color: lightgray;
-    border-left: 1px solid rgba($color: #333, $alpha: 0.2);
-    #sidebar-container {
-        padding: 5px;
+    display: block;
+    background-color: rgb(229, 229, 229);
+    width: 100%;
+    height: 100%;
 
-        .title {
-            text-align: center;
+    #sidebar-container {
+        background-color: rgb(229, 229, 229);
+        height: 100%;
+        padding: 1rem;
+
+        mat-card {
+
+            margin-bottom: 1rem;
+
+            mat-divider {
+                margin-bottom: 1rem;
+            }
+        
+            mat-card-content {
+                .mat-form-field {
+                    width: 100%;
+                }
+            }
         }
     }
 }

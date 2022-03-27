@@ -18,6 +18,9 @@
         color: white;
         -webkit-text-stroke: 1px rgba($color: #333, $alpha: 2);
         text-align: center;
-        font-family: Arial, Helvetica, sans-serif;
+        
+        h1 {
+            font-size: 1.5rem;
+        }
     }
 }
