@@ -1,0 +1,35 @@
+<div id="sidebar-container">
+    
+    <div>
+        <h2 class="title">Controls</h2>
+        <hr />
+
+        <h4>Power Plant Filter</h4>
+        <mat-form-field appearance="fill">
+            <mat-label>Power Plant Filter</mat-label>
+            <mat-select [formControl]="fuelFilterFormControl" #fuelselect
+                multiple>
+                <mat-select-trigger>
+                    {{fuelFilterFormControl.value ? fuelFilterFormControl.value[0] : ''}}
+                    <span *ngIf="fuelFilterFormControl.value?.length > 1">
+                        (+{{fuelFilterFormControl.value.length - 1}} {{fuelFilterFormControl.value?.length === 2 ? 'other' :
+                        'others'}})
+                    </span>
+                </mat-select-trigger>
+                <div class="select-all">
+                    <mat-checkbox [(ngModel)]="fuelAllSelected" [ngModelOptions]="{standalone: true}"
+                        (change)="fuelOptionToggleAllSelection()">Select All</mat-checkbox>
+                </div>
+                <mat-option *ngFor="let primaryFuel of mainServiceService.allFuels" [value]="primaryFuel" (click)="fuelOptionClick()">{{primaryFuel}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <div *ngIf="mainServiceService.clickedPowerPlantInfo">
+        <h2 class="title">PowerPlantInfo</h2>
+        <h4>Fuel Type</h4>
+        <p>{{mainServiceService.clickedPowerPlantInfo}}</p>
+        <hr />
+    </div>
+</div>

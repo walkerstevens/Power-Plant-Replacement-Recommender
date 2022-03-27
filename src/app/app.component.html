@@ -1,29 +1,5 @@
-<!-- Toolbar -->
-<div class="component-container">
+<div class="content" role="main">
+    <app-map></app-map>
+    <app-sidebar></app-sidebar>
+<div>
 
-  <div class="header" role="banner">
-    <h1>Team 80 Map</h1>
-  </div>
-
-  <div class="content" role="main">
-
-    <!-- Map Container -->
-
-      <mgl-map
-        [style]="'mapbox://styles/mhamm94/cl101t3n6002t14msgbh16kgt'"
-        [zoom]="[4]"
-        [center]="[-100.015755, 40.346741]"
-        (mapLoad)="mapLoaded($event)">
-<!--
-      <mgl-layer *ngFor="let powerPlant of powerPlants"
-        type="circle",
-        source="powerplant",
-        [lngLat]="[powerPlant.longitude, powerPlant.latitude]">
-          <div class="marker"></div>
-        </mgl-marker>
--->       
-      </mgl-map>
- 
-  <div>
-
-</div>
