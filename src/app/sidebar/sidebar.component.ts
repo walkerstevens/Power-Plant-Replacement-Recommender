@@ -10,16 +10,13 @@ import { map } from 'rxjs';
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent {
 
   @ViewChild('fuelselect') select: MatSelect;
   fuelAllSelected = false;
   fuelFilterFormControl = new FormControl();
 
-  constructor(public mainServiceService: MainServiceService) { }
-
-  ngOnInit(): void {
-  }
+  constructor(public mainServiceService: MainServiceService) {}
 
   fuelOptionToggleAllSelection() {
     if (this.fuelAllSelected) {

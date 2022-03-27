@@ -1,6 +1,6 @@
 <div id="sidebar-container">
     
-    <div>
+    <div style="border: 1px solid #777; padding: 10px;">
         <h2 class="title">Controls</h2>
         <hr />
 
@@ -25,11 +25,20 @@
             </mat-select>
         </mat-form-field>
     </div>
-
-    <div *ngIf="mainServiceService.clickedPowerPlantInfo">
+    <br />
+    <div style="border: 1px solid #777; padding: 10px;">
         <h2 class="title">PowerPlantInfo</h2>
-        <h4>Fuel Type</h4>
-        <p>{{mainServiceService.clickedPowerPlantInfo}}</p>
         <hr />
+        <div *ngIf="mainServiceService.clickedPowerPlantInfoObservable | async as powerPlantInfo; else loading">
+            <ng-container *ngFor="let item of powerPlantInfo | keyvalue">
+                <h5>{{item.key}}</h5>
+                <p>
+                    {{item.value}}
+                </p>
+            </ng-container>
+        </div>
+        <ng-template #loading>
+            Select a power plant for data
+        </ng-template>
     </div>
 </div>

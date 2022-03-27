@@ -9,7 +9,8 @@ export class MainServiceService {
   fuelFilter$: Subject<Array<string>> = new Subject();
   fuelFilterObservable = this.fuelFilter$.asObservable();
 
-  clickedPowerPlantInfo: any = null;
+  clickedPowerPlantInfo$: Subject<any> = new Subject();
+  clickedPowerPlantInfoObservable = this.clickedPowerPlantInfo$.asObservable();
 
   allFuels: Set<string>;
 

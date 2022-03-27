@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ApplicationRef, Component, OnInit } from '@angular/core';
 import { parse } from 'papaparse'
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { GeoJSONSource, Map } from 'mapbox-gl';
@@ -19,7 +19,7 @@ export class MapComponent {
     'features': null
   }
 
-  constructor(private _snackBar: MatSnackBar, private mainServiceService: MainServiceService) {
+  constructor(private _applicationRef: ApplicationRef, private _snackBar: MatSnackBar, private mainServiceService: MainServiceService) {
     this.mainServiceService.fuelFilterObservable.subscribe(this.onFuelFilterChange)
   }
 
@@ -83,7 +83,8 @@ export class MapComponent {
         // Register callbacks if feature is clicked
         this.map.on('click', 'unclustered-point', (event) => {
           if(event.features) {
-            this.mainServiceService.clickedPowerPlantInfo = Object.create(event.features[0].properties);
+            this.mainServiceService.clickedPowerPlantInfo$.next(event.features[0].properties);
+            this._applicationRef.tick()
           }
         });
 
