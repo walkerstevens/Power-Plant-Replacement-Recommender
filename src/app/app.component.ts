@@ -13,9 +13,5 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this._mainService.loadPowerPlantData();
   }
-
-  loadPowerPlantData() {
-
-  }
   
 }

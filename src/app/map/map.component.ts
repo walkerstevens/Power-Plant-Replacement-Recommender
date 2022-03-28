@@ -1,9 +1,8 @@
 import { ApplicationRef, Component, OnInit } from '@angular/core';
-import { parse } from 'papaparse'
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { GeoJSONSource, Map } from 'mapbox-gl';
+import { Map } from 'mapbox-gl';
 import { MainServiceService } from '../../app/main-service.service'
-import { select, svg } from 'd3';
+import { select } from 'd3';
 import * as mapboxgl from 'mapbox-gl';
 
 @Component({
@@ -34,9 +33,7 @@ export class MapComponent implements OnInit {
   }
 
   createD3SVG() {
-    // TODO: check if this.map is even created yet
     // TODO: put styles in class
-    console.log(this.map);
     this.svg = select(this.map.getCanvasContainer())
       .append("svg")
       .attr("width", "100%")

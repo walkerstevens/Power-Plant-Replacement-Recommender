@@ -64,9 +64,25 @@ export class MainServiceService {
     }).then((data) => {
       // Emit to subscribers the data
       this._powerPlantData.next(data);
+      this.getFuelTypes(data);
     });
 
     // Return obserable in case it is wanted
     return this.powerPlantData$;
+  }
+
+  getFuelTypes(powerPlantData: any) {
+    let fuelTypeSet = new Set<string>();
+    // Gets all fuel names
+    for(let powerPlant of powerPlantData) {
+      // Fuel names can be in multiple columns in data
+      for(let propertyWithFuelName of ["primary_fuel", "other_fuel1", "other_fuel2", "other_fuel3"]) {
+        let fuelName = powerPlant[propertyWithFuelName];
+        if(fuelName != null && fuelName != "") {
+          fuelTypeSet.add(fuelName);
+        }
+      }
+    }
+    this.allFuels = fuelTypeSet;
   }
 }
