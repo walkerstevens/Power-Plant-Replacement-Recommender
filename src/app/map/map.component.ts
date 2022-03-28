@@ -3,137 +3,78 @@ import { parse } from 'papaparse'
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { GeoJSONSource, Map } from 'mapbox-gl';
 import { MainServiceService } from '../../app/main-service.service'
+import { select, svg } from 'd3';
+import * as mapboxgl from 'mapbox-gl';
 
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss']
 })
-export class MapComponent {
+export class MapComponent implements OnInit {
 
   map: Map;
-  title = 'team80-map';
-  powerPlants: Array<any> = [];
-  POWER_PLANT_SOURCE_DATA_TEMPLATE = {
-    'type': 'FeatureCollection',
-    'features': null
-  }
+  svg: any;
+  powerPlantCircles: any;
 
-  constructor(private _applicationRef: ApplicationRef, private _snackBar: MatSnackBar, private mainServiceService: MainServiceService) {
-    this.mainServiceService.fuelFilterObservable.subscribe(this.onFuelFilterChange)
-  }
+  constructor(private _applicationRef: ApplicationRef, private _snackBar: MatSnackBar, private _mainService: MainServiceService) {}
 
-  ngOnInit(): void { }
-
-  onFuelFilterChange = (fuelFilter: Array<String>) => {
-    let filteredPowerPlants = this.powerPlants.filter((powerPlant) => {
-      return fuelFilter.includes(powerPlant.primary_fuel);
-    });
-    let features = this.createPowerPlantFeatures(filteredPowerPlants);
-    let data = Object.create(this.POWER_PLANT_SOURCE_DATA_TEMPLATE);
-    data.features = features;
-    (<GeoJSONSource>this.map.getSource("powerplants")).setData(data)
-  }
-
-  getAllFuels(powerPlants: any): void {
-
-    let primaryFuels: Set<string> = new Set();
-    for (let powerPlant of powerPlants) {
-      primaryFuels.add(powerPlant.primary_fuel)
-    }
-    this.mainServiceService.allFuels = primaryFuels;
-  }
-
-  createPowerPlantFeatures(powerPlants: Array<any>): Array<any> {
-    let features: any = [];
-    powerPlants.forEach((powerPlant: any) => {
-      features.push(
-        {
-          'type': 'Feature',
-          'geometry': {
-            'type': 'Point',
-            'coordinates': [powerPlant.longitude, powerPlant.latitude]
-          },
-          'properties': {
-            'title': powerPlant.name,
-            'capacity': parseFloat(powerPlant.capacity_mw),
-            'primary_fuel': powerPlant.primary_fuel
-          }
-        }
-      );
-    });
-    return features;
-  }
+  ngOnInit(): void {}
 
   mapLoaded(map: Map): void {
-
+    // Save map to class
     this.map = map;
 
-    parse("./dataset/us_powerplants.csv", {
-      header: true,
-      delimiter: ',',
-      download: true,
-      complete: (results: any) => {
+    this.createD3SVG()
+    this.mapPowerPlants()
+    // When user drags or zooms, this needs to re-render d3
+    this.bindMapBoxEvents();
+    // Call once for initialiation
+    this.render();
+  }
 
-        this.powerPlants = results.data.filter((result: any) => !isNaN(result.longitude) && !isNaN(result.latitude));
-        this.getAllFuels(this.powerPlants);
+  createD3SVG() {
+    // TODO: check if this.map is even created yet
+    // TODO: put styles in class
+    console.log(this.map);
+    this.svg = select(this.map.getCanvasContainer())
+      .append("svg")
+      .attr("width", "100%")
+      .attr("height", "100%")
+      .style("position", "absolute")
+      .style("z-index", 2)
+  }
 
-        this.loadPowerPlantsOnMap();
-
-        // Register callbacks if feature is clicked
-        this.map.on('click', 'unclustered-point', (event) => {
-          if(event.features) {
-            this.mainServiceService.clickedPowerPlantInfo$.next(event.features[0].properties);
-            this._applicationRef.tick()
-          }
-        });
-
-        // Show mouse pointer when hovering over feature
-        this.map.on('mouseenter', 'unclustered-point', () => {
-          this.map.getCanvas().style.cursor = 'pointer';
-        });
-
-        this.map.on('mouseleave', 'unclustered-point', () => {
-          this.map.getCanvas().style.cursor = '';
-        });
-      },
-      error: () => {
-        this._snackBar.open('Could not load power plant csv');
-      }
+  mapPowerPlants() {
+    this._mainService.powerPlantData$.subscribe((powerPlantData) => {
+      this.powerPlantCircles = this.svg.selectAll("circle")
+        .data(powerPlantData)
+        .enter()
+        .append("circle")
+        .attr("r", 5) // TODO: make variable
+        .style("fill", "#51bbd6")
+        .style("stroke", "#ffffff");
     });
   }
 
-  loadPowerPlantsOnMap() {
-    let features = this.createPowerPlantFeatures(this.powerPlants);
-    this.map.addSource('powerplants', {
-      'type': 'geojson',
-      'data': {
-        'type': 'FeatureCollection',
-        'features': features
-      },
-      cluster: true,
-      clusterMaxZoom: 2, // Max zoom to cluster points on
-      clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
-    });
+  bindMapBoxEvents() {
+    // Need to use arrow notation so 'this' is not lost
+    this.map.on("viewreset", () => { this.render(); });
+    this.map.on("move", () => { this.render(); });
+    this.map.on("moveend", () => { this.render(); });
+  }
 
-    this.map.addLayer({
-      id: 'unclustered-point',
-      type: 'circle',
-      source: 'powerplants',
-      filter: ['!', ['has', 'point_count']],
-      paint: {
-        //'circle-color': [
-        //  'interpolate',
-        //  ['linear'],
-        //  ["sqrt", ["/", ["get", "capacity"], Math.PI]],
-        //  0, '#deebf7',
-        //  100, '#3182bd',
-        //],
-        'circle-color': '#51bbd6',
-        'circle-radius': 5,
-        'circle-stroke-width': 1,
-        'circle-stroke-color': '#fff'
-      }
-    });
+  render() {
+    this.powerPlantCircles
+      .attr("cx", (d:any) => {
+        return this.project(d).x;
+      })
+      .attr("cy", (d:any) => {
+        return this.project(d).y;
+      })
+  }
+
+  project(d:any) {
+    return this.map.project(new mapboxgl.LngLat(d.longitude, d.latitude));
   }
 }
