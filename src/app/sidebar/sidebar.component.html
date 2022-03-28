@@ -31,7 +31,7 @@
         <mat-card-title>Power Plant Info</mat-card-title>
         <mat-divider inset></mat-divider>
         <mat-card-content>
-            <div *ngIf="mainServiceService.clickedPowerPlantInfoObservable | async as powerPlantInfo; else loading">
+            <div *ngIf="mainServiceService.selectedPowerPlant$ | async as powerPlantInfo; else loading">
                 <ng-container *ngFor="let item of powerPlantInfo | keyvalue">
                     <label>{{item.key}}</label>
                     <p>

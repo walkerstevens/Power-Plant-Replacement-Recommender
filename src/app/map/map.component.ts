@@ -14,11 +14,13 @@ export class MapComponent implements OnInit {
 
   map: Map;
   svg: any;
+  powerPlants: any = [];
+  powerPlantsFiltered: any = [];
   powerPlantCircles: any;
 
-  constructor(private _applicationRef: ApplicationRef, private _snackBar: MatSnackBar, private _mainService: MainServiceService) {}
+  constructor(private _applicationRef: ApplicationRef, private _snackBar: MatSnackBar, private _mainService: MainServiceService) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   mapLoaded(map: Map): void {
     // Save map to class
@@ -26,10 +28,6 @@ export class MapComponent implements OnInit {
 
     this.createD3SVG()
     this.mapPowerPlants()
-    // When user drags or zooms, this needs to re-render d3
-    this.bindMapBoxEvents();
-    // Call once for initialiation
-    this.render();
   }
 
   createD3SVG() {
@@ -44,14 +42,47 @@ export class MapComponent implements OnInit {
 
   mapPowerPlants() {
     this._mainService.powerPlantData$.subscribe((powerPlantData) => {
-      this.powerPlantCircles = this.svg.selectAll("circle")
-        .data(powerPlantData)
-        .enter()
-        .append("circle")
-        .attr("r", 5) // TODO: make variable
-        .style("fill", "#51bbd6")
-        .style("stroke", "#ffffff");
+
+      this.powerPlants = powerPlantData;
+      this.powerPlantsFiltered = powerPlantData;
+
+      this.createPowerPlantCircles();
+
+      // When user drags or zooms, this needs to re-render d3
+      this.bindMapBoxEvents();
+      // Call once for initialiation
+      this.render();
+      // Register filter callback
+      this.registerFilter();
+
     });
+  }
+
+  createPowerPlantCircles() {
+    this.powerPlantCircles = this.svg.selectAll("circle")
+      .data(this.powerPlantsFiltered)
+      .enter()
+      .append("circle")
+      .attr("r", 5) // TODO: make variable
+      .style("fill", "#51bbd6")
+      .style("stroke", "#ffffff")
+      .style("cursor", "pointer");
+
+    this.powerPlantCircles.on("mouseover",
+      (d: any) => { // TODO: not sure if d here is the data
+        this.showHoverTooltip(d);
+      }
+    );
+    this.powerPlantCircles.on("mouseout",
+      (d: any) => {
+        this.hideHoverTooltip();
+      }
+    );
+    this.powerPlantCircles.on("click",
+      (pointerEvent: PointerEvent, d: any) => {
+        this._mainService.selectPowerPlant(d);
+      }
+    );
   }
 
   bindMapBoxEvents() {
@@ -63,15 +94,40 @@ export class MapComponent implements OnInit {
 
   render() {
     this.powerPlantCircles
-      .attr("cx", (d:any) => {
+      .attr("cx", (d: any) => {
         return this.project(d).x;
       })
-      .attr("cy", (d:any) => {
+      .attr("cy", (d: any) => {
         return this.project(d).y;
       })
   }
 
-  project(d:any) {
+  project(d: any) {
     return this.map.project(new mapboxgl.LngLat(d.longitude, d.latitude));
+  }
+
+  showHoverTooltip(powerPlant: any) {
+    // TODO:
+  }
+
+  hideHoverTooltip() {
+    // TODO:
+  }
+
+  registerFilter() {
+    this._mainService.fuelFilter$.subscribe((fuelFilter) => {
+      // Get all power plants that match the filter 
+      this.powerPlantsFiltered = this.powerPlants.filter((powerPlant: any) => {
+        return fuelFilter.includes(powerPlant.primary_fuel) ||
+               fuelFilter.includes(powerPlant.other_fuel1) ||
+               fuelFilter.includes(powerPlant.other_fuel2) ||
+               fuelFilter.includes(powerPlant.other_fuel3)
+      });
+
+      // Delete circles
+      this.svg.selectAll("circle").remove();
+      this.createPowerPlantCircles();
+      this.render();
+    });
   }
 }

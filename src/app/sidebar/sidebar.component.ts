@@ -20,10 +20,10 @@ export class SidebarComponent {
   fuelOptionToggleAllSelection() {
     if (this.fuelAllSelected) {
       this.select.options.forEach((item: MatOption) => item.select());
-      this.mainServiceService.fuelFilter$.next(this.select.options.map((item) => item.value));
+      this.mainServiceService.setFuelFilter(this.select.options.map((item) => item.value));
     } else {
       this.select.options.forEach((item: MatOption) => item.deselect());
-      this.mainServiceService.fuelFilter$.next([]);
+      this.mainServiceService.setFuelFilter([]);
     }
   }
 
@@ -38,6 +38,6 @@ export class SidebarComponent {
       }
     }
     this.fuelAllSelected = newAllSelectedStatus;
-    this.mainServiceService.fuelFilter$.next(this.select.options.filter((item) => item.selected).map((item) => item.value));
+    this.mainServiceService.setFuelFilter(this.select.options.filter((item) => item.selected).map((item) => item.value));
   }
 }

@@ -11,11 +11,11 @@ export class MainServiceService {
   private _powerPlantData: ReplaySubject<any> = new ReplaySubject();
   powerPlantData$ = this._powerPlantData.asObservable();
 
-  fuelFilter$: Subject<Array<string>> = new Subject();
-  fuelFilterObservable = this.fuelFilter$.asObservable();
+  private _fuelFilter: ReplaySubject<Array<string>> = new ReplaySubject();
+  fuelFilter$ = this._fuelFilter.asObservable();
 
-  clickedPowerPlantInfo$: Subject<any> = new Subject();
-  clickedPowerPlantInfoObservable = this.clickedPowerPlantInfo$.asObservable();
+  private _selectedPowerPlant: ReplaySubject<any> = new ReplaySubject();
+  selectedPowerPlant$ = this._selectedPowerPlant.asObservable();
 
   allFuels: Set<string>;
 
@@ -84,5 +84,13 @@ export class MainServiceService {
       }
     }
     this.allFuels = fuelTypeSet;
+  }
+
+  selectPowerPlant(powerPlant: any) {
+    this._selectedPowerPlant.next(powerPlant);
+  }
+
+  setFuelFilter(fuelFilter: Array<string>) {
+    this._fuelFilter.next(fuelFilter);
   }
 }
