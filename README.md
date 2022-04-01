@@ -2,6 +2,14 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.3.0.
 
+# Instructions
+
+Run `npm install`
+To run locally run `ng serve --open`
+To build to aws run `build-stack.bat`
+
+# Angular Auto-generated Code
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
