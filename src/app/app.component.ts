@@ -8,13 +8,7 @@ import { MainServiceService } from './main-service.service'
 })
 export class AppComponent implements OnInit {
 
-  a = 0
-
   constructor(private _mainService : MainServiceService) {}
-
-  myfunction() {
-    this.a += 1;
-  }
 
   ngOnInit(): void {
     this._mainService.loadPowerPlantData();
