@@ -1,0 +1,26 @@
+:host {
+    flex-grow: 1;
+
+    mgl-map {
+        height: 100%;
+        width: 100%;
+    }
+
+    .header {
+        display: inline-block;
+        margin-left: 10px;
+        margin-top: 5px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 3;
+        font-weight: 600;
+        color: white;
+        -webkit-text-stroke: 1px rgba($color: #333, $alpha: 2);
+        text-align: center;
+        
+        h1 {
+            font-size: rem;
+        }
+    }
+}

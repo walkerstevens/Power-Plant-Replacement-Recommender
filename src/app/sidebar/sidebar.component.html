@@ -1,0 +1,47 @@
+<div id="sidebar-container">
+    <mat-card>
+        <mat-card-title>Controls</mat-card-title>
+        <mat-divider inset></mat-divider>
+        <mat-card-content>
+            <label>Power Plant Filter</label>
+            <mat-form-field appearance="fill">
+                <mat-label>Power Plant Filter</mat-label>
+                <mat-select [formControl]="fuelFilterFormControl" #fuelselect multiple>
+                    <mat-select-trigger>
+                        {{fuelFilterFormControl.value ? fuelFilterFormControl.value[0] : ''}}
+                        <span *ngIf="fuelFilterFormControl.value?.length > 1">
+                            (+{{fuelFilterFormControl.value.length - 1}} {{fuelFilterFormControl.value?.length === 2 ?
+                            'other' :
+                            'others'}})
+                        </span>
+                    </mat-select-trigger>
+                    <div class="select-all">
+                        <mat-checkbox [(ngModel)]="fuelAllSelected" [ngModelOptions]="{standalone: true}"
+                            (change)="fuelOptionToggleAllSelection()">Select All</mat-checkbox>
+                    </div>
+                    <mat-option *ngFor="let primaryFuel of mainServiceService.allFuels" [value]="primaryFuel"
+                        (click)="fuelOptionClick()">{{primaryFuel}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+        <mat-card-title>Power Plant Info</mat-card-title>
+        <mat-divider inset></mat-divider>
+        <mat-card-content>
+            <div *ngIf="mainServiceService.selectedPowerPlant$ | async as powerPlantInfo; else loading">
+                <ng-container *ngFor="let item of powerPlantInfo | keyvalue">
+                    <label>{{item.key}}</label>
+                    <p>
+                        {{item.value}}
+                    </p>
+                </ng-container>
+            </div>
+            <ng-template #loading>
+                Select a power plant for data
+            </ng-template>
+        </mat-card-content>
+    </mat-card>
+</div>
