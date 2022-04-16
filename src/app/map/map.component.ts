@@ -10,6 +10,7 @@ import * as mapboxgl from 'mapbox-gl';
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss']
 })
+
 export class MapComponent implements OnInit {
 
   map: Map;
@@ -57,14 +58,84 @@ export class MapComponent implements OnInit {
 
     });
   }
-
+  
+  //let colors = {};
+  
   createPowerPlantCircles() {
     this.powerPlantCircles = this.svg.selectAll("circle")
       .data(this.powerPlantsFiltered)
       .enter()
       .append("circle")
-      .attr("r", 5) // TODO: make variable
-      .style("fill", "#51bbd6")
+      .attr("r", (d: any) => { if (d.capacity_mw < 2.6) 
+                               {
+                                 return 3.5; 
+                               }
+                               else
+                               {
+                                 return 3.5 + (8.5 * (d.capacity_mw / 6809)); 
+                               }
+                             })
+      .style("fill", (d: any) => { // Shades of red
+                                   if (d.primary_fuel == "Coal")
+                                   {
+                                     return "#CF352E"; 
+                                   }
+                                   else if (d.primary_fuel == "Petcoke")
+                                   {
+                                     return "#FF0038"; 
+                                   }
+                                   else if (d.primary_fuel == "Oil") 
+                                   {
+                                     return "#8A0707"; 
+                                   }
+                                   else if (d.primary_fuel == "Gas")
+                                   {
+                                     return "#FF0800"; 
+                                   }
+                                   else if (d.primary_fuel == "Cogeneration")
+                                   {
+                                     return "#E32636"; 
+                                   }
+                                   // Shades of blue
+                                   else if (d.primary_fuel == "Solar")
+                                   {
+                                     return "#00BFFF"; 
+                                   }
+                                   else if (d.primary_fuel == "Wind")
+                                   {
+                                     return "#0073CF"; 
+                                   }
+                                   else if (d.primary_fuel == "Geothermal")
+                                   {
+                                     return "#1CA9C9"; 
+                                   }
+                                   else if (d.primary_fuel == "Hydro")
+                                   {
+                                     return "#1B5583"; 
+                                   }     
+                                   else if (d.primary_fuel == "Waste")
+                                   {
+                                     return "#4682B4"; 
+                                   }
+                                   else if (d.primary_fuel == "Biomass")
+                                   {
+                                     return "#969696"; 
+                                   }
+                                   // Purple
+                                   else if (d.primary_fuel == "Nuclear")
+                                   {
+                                     return "#6a51a3"; 
+                                   }
+                                   // Shades of grey
+                                   else if (d.primary_fuel == "Storage")
+                                   {
+                                     return "#778899"; 
+                                   }
+                                   else
+                                   {
+                                     return "#C0C0C0"; 
+                                   }
+                                 })
       .style("stroke", "#ffffff")
       .style("cursor", "pointer");
 
