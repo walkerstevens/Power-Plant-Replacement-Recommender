@@ -44,4 +44,18 @@
             </ng-template>
         </mat-card-content>
     </mat-card>
+    
+    <!--TODO: Edit this to recommend power plants-->
+    <mat-card>
+        <mat-card-title>Plant Recommendation</mat-card-title>
+        <mat-divider inset></mat-divider>
+        <mat-card-content>
+            <div *ngIf="mainServiceService.selectedPowerPlant$ | async as powerPlantInfo; else loadingRec">
+                <label>TODO: Add recommended plant</label>
+            </div>
+            <ng-template #loadingRec>
+                Select a power plant for recommendation
+            </ng-template>
+        </mat-card-content>
+    </mat-card>
 </div>
