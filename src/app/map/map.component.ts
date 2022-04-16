@@ -64,7 +64,7 @@ export class MapComponent implements OnInit {
       .data(this.powerPlantsFiltered)
       .enter()
       .append("circle")
-      .attr("r", (d: any) => { return dotRadius(d) })
+      .attr("r", (d: any) => { return 3.5 + (14 * (d.capacity_mw / 6809)); })
       .style("fill", (d: any) => { return dotColor(d) })
       .style("stroke", "#ffffff")
       .style("cursor", "pointer");
@@ -129,17 +129,7 @@ export class MapComponent implements OnInit {
     });
   }
 }
-
-var dotRadius = function(d: any) { if (d.capacity_mw < 2.6) 
-                                   {
-                                     return 3.5; 
-                                   }
-                                     else
-                                   {
-                                     return 3.5 + (8.5 * (d.capacity_mw / 6809)); 
-                                   }
-                                 }
-                                 
+                          
 var dotColor = function(d: any) { // Shades of red
                                   if (d.primary_fuel == "Coal")
                                   {
