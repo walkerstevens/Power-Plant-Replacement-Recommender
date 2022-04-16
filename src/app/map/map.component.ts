@@ -65,7 +65,7 @@ export class MapComponent implements OnInit {
       .enter()
       .append("circle")
       .attr("r", (d: any) => { return 3.5 + (14 * (d.capacity_mw / 6809)); })
-      .style("fill", (d: any) => { return dotColor(d) })
+      .style("fill", (d: any) => { return dotColor[d.primary_fuel] })
       .style("stroke", "#ffffff")
       .style("cursor", "pointer");
 
@@ -129,65 +129,21 @@ export class MapComponent implements OnInit {
     });
   }
 }
-                          
-var dotColor = function(d: any) { // Shades of red
-                                  if (d.primary_fuel == "Coal")
-                                  {
-                                    return "#CF352E"; 
-                                  }
-                                  else if (d.primary_fuel == "Petcoke")
-                                  {
-                                    return "#FF0038"; 
-                                  }
-                                  else if (d.primary_fuel == "Oil") 
-                                  {
-                                    return "#8A0707"; 
-                                  }
-                                  else if (d.primary_fuel == "Gas")
-                                  {
-                                    return "#FF0800"; 
-                                  }
-                                  else if (d.primary_fuel == "Cogeneration")
-                                  {
-                                    return "#E32636"; 
-                                  }
-                                  // Shades of blue
-                                  else if (d.primary_fuel == "Solar")
-                                  {
-                                    return "#00BFFF"; 
-                                  }
-                                  else if (d.primary_fuel == "Wind")
-                                  {
-                                    return "#0073CF"; 
-                                  }
-                                  else if (d.primary_fuel == "Geothermal")
-                                  {
-                                   return "#1CA9C9"; 
-                                  }
-                                  else if (d.primary_fuel == "Hydro")
-                                  {
-                                    return "#1B5583"; 
-                                  }     
-                                  else if (d.primary_fuel == "Waste")
-                                  {
-                                    return "#4682B4"; 
-                                  }
-                                  else if (d.primary_fuel == "Biomass")
-                                  {
-                                    return "#969696"; 
-                                  }
-                                  // Purple
-                                  else if (d.primary_fuel == "Nuclear")
-                                  {
-                                    return "#6a51a3"; 
-                                  }
-                                  // Shades of grey
-                                  else if (d.primary_fuel == "Storage")
-                                  {
-                                    return "#778899"; 
-                                  }
-                                  else
-                                  {
-                                    return "#C0C0C0"; 
-                                  }};
+
+var dotColor: Record<string, string> = {};
+
+dotColor['Coal'] = "#CF352E";  
+dotColor['Petcoke'] = "#FF0038";
+dotColor['Oil'] = "#8A0707";
+dotColor['Gas'] = "#FF0800";
+dotColor['Cogeneration'] = "#E32636";
+dotColor['Solar'] = "#00BFFF";
+dotColor['Wind'] = "#0073CF";
+dotColor['Geothermal'] = "#1CA9C9";
+dotColor['Hydro'] = "#1B5583";
+dotColor['Waste'] = "#4682B4";
+dotColor['Biomass'] = "#969696";
+dotColor['Nuclear'] = "#6a51a3";
+dotColor['Storage'] = "#778899";
+dotColor['Other'] = "#C0C0C0";
 
