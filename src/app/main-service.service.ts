@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { dsv } from 'd3'
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MainServiceService {
+
+  static readonly API_HOST_NAME = "https://5sloc23ke4.execute-api.us-east-1.amazonaws.com/dev"
 
   // If data is emitted before subscribing, ReplySubject will re-emit the data
   private _powerPlantData: ReplaySubject<any> = new ReplaySubject();
@@ -19,7 +22,7 @@ export class MainServiceService {
 
   allFuels: Set<string>;
 
-  constructor() {}
+  constructor(private _httpClient : HttpClient) {}
 
   loadPowerPlantData() {
     dsv(",", "./dataset/us_powerplants.csv",
@@ -66,4 +69,9 @@ export class MainServiceService {
   setFuelFilter(fuelFilter: Array<string>) {
     this._fuelFilter.next(fuelFilter);
   }
+
+  getPlantSuggestion(latitude: number, longitude: number, radius: number) {
+    return this._httpClient.get<any>(MainServiceService.API_HOST_NAME + `/power-plant-suggestion?latitude=${latitude}&longitude=${longitude}&radius=${radius}`);
+  }
+
 }
