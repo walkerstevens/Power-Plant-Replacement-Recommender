@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Observable, ReplaySubject, Subject } from 'rxjs';
+import { flatMap, map, Observable, ReplaySubject, Subject } from 'rxjs';
 import { dsv } from 'd3'
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MainServiceService {
+
+  static readonly API_HOST_NAME = "https://5sloc23ke4.execute-api.us-east-1.amazonaws.com/dev"
 
   // If data is emitted before subscribing, ReplySubject will re-emit the data
   private _powerPlantData: ReplaySubject<any> = new ReplaySubject();
@@ -17,11 +20,14 @@ export class MainServiceService {
   private _selectedPowerPlant: ReplaySubject<any> = new ReplaySubject();
   selectedPowerPlant$ = this._selectedPowerPlant.asObservable();
 
+  private _powerPlantLCOEs: ReplaySubject<any> = new ReplaySubject();
+  powerPlantLCOEs$ = this._powerPlantLCOEs.asObservable();
+
   allFuels: Set<string>;
 
-  constructor() {}
+  constructor(private _httpClient: HttpClient) {}
 
-  loadPowerPlantData() {
+  loadPowerPlantData() : Observable<any> {
     dsv(",", "./dataset/us_powerplants.csv",
       function (d) {
         return {
@@ -57,6 +63,34 @@ export class MainServiceService {
       }
     }
     this.allFuels = fuelTypeSet;
+  }
+
+  getRenewableAlternativeLCOEs(longtitude: number, latitude: number, radius: number) : Observable<any> {
+    let obs = this._httpClient.get(MainServiceService.API_HOST_NAME + `/capacity-factors?latitude=${latitude}&longitude=${longtitude}&radius=${radius}`,
+      { 
+        headers: new HttpHeaders(
+          {
+            "Content-Type": "application/json"
+          })
+      })
+      .pipe(map((capacityFactoryInfo: any) => {
+        return {
+          latitude: capacityFactoryInfo.latitude,
+          longtitude: capacityFactoryInfo.longitude,
+          fuelType: capacityFactoryInfo.fuel_type,
+          loce: this.convertToLCOE(capacityFactoryInfo.capacityFactor),
+        }
+      }));
+      
+    obs.subscribe((powerPlantLCOEs) => {
+        this._powerPlantLCOEs.next(powerPlantLCOEs)
+      });
+
+    return obs;
+  }
+
+  convertToLCOE(capcityFactor: number) {
+    return capcityFactor; // TODO: fix
   }
 
   selectPowerPlant(powerPlant: any) {

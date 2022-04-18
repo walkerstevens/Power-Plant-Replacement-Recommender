@@ -42,10 +42,10 @@
                 <form>
                     <mat-form-field appearance="fill">
                         <mat-label>Radius</mat-label>
-                        <input matInput placeholder="Radius (km)" value="70" />
+                        <input matInput name="radius" placeholder="Radius (km)" value="70" [(ngModel)]="radius" />
                         <span style="margin-top: 5px; position: absolute; right: 0;">km</span>
                     </mat-form-field>
-                    <button mat-flat-button class="compute-button" color="primary">Compute Renewable Alternatives</button>
+                    <button mat-flat-button class="compute-button" color="primary" (click)="computeRenewableAlternativesClick()">Compute Renewable Alternatives</button>
                 </form>
             </div>
             <ng-template #loading>

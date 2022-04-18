@@ -15,6 +15,8 @@ export class SidebarComponent {
   fuelAllSelected = false;
   fuelFilterFormControl = new FormControl();
 
+  radius = 70;
+
   constructor(public mainServiceService: MainServiceService) {}
 
   fuelOptionToggleAllSelection() {
@@ -39,5 +41,11 @@ export class SidebarComponent {
     }
     this.fuelAllSelected = newAllSelectedStatus;
     this.mainServiceService.setFuelFilter(this.select.options.filter((item) => item.selected).map((item) => item.value));
+  }
+
+  computeRenewableAlternativesClick() {
+    this.mainServiceService.selectedPowerPlant$.subscribe((selectedPowerPlant) => {
+      this.mainServiceService.getRenewableAlternativeLCOEs(selectedPowerPlant.latitude, selectedPowerPlant.longitude, this.radius)
+    });
   }
 }

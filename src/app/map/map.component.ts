@@ -19,9 +19,17 @@ export class MapComponent implements OnInit {
   powerPlantsFiltered: any = [];
   powerPlantCircles: any;
 
+  // Heatmap
+  lcoes: any = [];
+  lcoeRectangles: any;
+
   // Tooltip
   toolTipVisible: boolean = false;
   hoveredPowerPlant: any;
+
+  // Selected power plant
+  selectedPowerPlant: any;
+  selectedPowerPlantCircle: any;
 
   constructor(private _applicationRef: ApplicationRef, private _snackBar: MatSnackBar, private _mainService: MainServiceService) { }
 
@@ -52,6 +60,7 @@ export class MapComponent implements OnInit {
       this.powerPlantsFiltered = powerPlantData;
 
       this.createPowerPlantCircles();
+      this.createLCOEHeatMap();
 
       // When user drags or zooms, this needs to re-render d3
       this.bindMapBoxEvents();
@@ -59,7 +68,8 @@ export class MapComponent implements OnInit {
       this.render();
       // Register filter callback
       this.registerFilter();
-
+      // Register LCOE computation callback
+      this.registerLCOEComputation();
     });
   }
   
@@ -69,8 +79,6 @@ export class MapComponent implements OnInit {
       .enter()
       .append("circle")
       .attr("r", this.getCirclRadius)
-      .style("fill", (d: any) => { return dotColor[d.primary_fuel] })
-      .style("stroke", "#ffffff")
       .style("cursor", "pointer");
 
     this.powerPlantCircles.on("mouseover",
@@ -85,10 +93,21 @@ export class MapComponent implements OnInit {
     );
     this.powerPlantCircles.on("click",
       (pointerEvent: PointerEvent, d: any) => {
-        this.createHeatMap();
+        this.selectedPowerPlant = d;
         this._mainService.selectPowerPlant(d);
+        this.render()
       }
     );
+  }
+
+  createLCOEHeatMap() {
+    this.lcoeRectangles = this.svg.selectAll("rect")
+      .data(this.lcoes)
+      .enter()
+      .append("rect")
+      .attr("width", 2) // TODO: fix
+      .attr("height", 2) // TODO: fix
+      .style("fill", "#FF0000") // TODO: fix
   }
 
   getCirclRadius(d: any) {
@@ -110,6 +129,26 @@ export class MapComponent implements OnInit {
       .attr("cy", (d: any) => {
         return this.project(d).y;
       })
+      .style("fill", (d: any) => {
+        if(d == this.selectedPowerPlant) {
+          return "#FFFF00";
+        }
+        return dotColor[d.primary_fuel];
+      })
+      .style("stroke", (d: any) => {
+        if(d == this.selectedPowerPlant) {
+          return "#000000";
+        }
+        return "#FFFFFF";
+      });
+
+    this.lcoeRectangles
+      .attr("x", (d: any) => {
+        return this.project(d).x;
+      })
+      .attr("y", (d: any) => {
+        return this.project(d).y;
+      })
   }
 
   project(d: any) {
@@ -118,7 +157,6 @@ export class MapComponent implements OnInit {
 
   showHoverTooltip(powerPlant: any) {
     this.toolTipVisible = true;
-    console.log(powerPlant);
     this.hoveredPowerPlant = powerPlant;
   }
 
@@ -136,13 +174,24 @@ export class MapComponent implements OnInit {
 
       // Delete circles
       this.svg.selectAll("circle").remove();
+      // Create new ones
       this.createPowerPlantCircles();
       this.render();
     });
   }
 
-  createHeatMap() {
+  registerLCOEComputation() {
+    this._mainService.powerPlantLCOEs$.subscribe((lcoes) => {
 
+      this.lcoes = lcoes;
+
+      // Delete rectangles
+      this.svg.selectAll("rect").remove();
+      // Create new ones
+      this.createLCOEHeatMap();
+      this.render();
+
+    })
   }
 }
 
