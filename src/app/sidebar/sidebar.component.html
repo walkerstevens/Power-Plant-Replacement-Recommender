@@ -38,6 +38,15 @@
                         {{item.value}}
                     </p>
                 </ng-container>
+                <mat-divider inset></mat-divider>
+                <form>
+                    <mat-form-field appearance="fill">
+                        <mat-label>Radius</mat-label>
+                        <input matInput placeholder="Radius (km)" value="70" />
+                        <span style="margin-top: 5px; position: absolute; right: 0;">km</span>
+                    </mat-form-field>
+                    <button mat-flat-button class="compute-button" color="primary">Compute Renewable Alternatives</button>
+                </form>
             </div>
             <ng-template #loading>
                 Select a power plant for data

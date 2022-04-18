@@ -19,6 +19,10 @@ export class MapComponent implements OnInit {
   powerPlantsFiltered: any = [];
   powerPlantCircles: any;
 
+  // Tooltip
+  toolTipVisible: boolean = false;
+  hoveredPowerPlant: any;
+
   constructor(private _applicationRef: ApplicationRef, private _snackBar: MatSnackBar, private _mainService: MainServiceService) { }
 
   ngOnInit(): void { }
@@ -64,26 +68,31 @@ export class MapComponent implements OnInit {
       .data(this.powerPlantsFiltered)
       .enter()
       .append("circle")
-      .attr("r", (d: any) => { return 3.5 + (14 * (d.capacity_mw / 6809)); })
+      .attr("r", this.getCirclRadius)
       .style("fill", (d: any) => { return dotColor[d.primary_fuel] })
       .style("stroke", "#ffffff")
       .style("cursor", "pointer");
 
     this.powerPlantCircles.on("mouseover",
-      (d: any) => { // TODO: not sure if d here is the data
+      (mouseEvent: any, d: any) => { // TODO: not sure if d here is the data
         this.showHoverTooltip(d);
       }
     );
     this.powerPlantCircles.on("mouseout",
-      (d: any) => {
+      (mouseEvent: any, d: any) => {
         this.hideHoverTooltip();
       }
     );
     this.powerPlantCircles.on("click",
       (pointerEvent: PointerEvent, d: any) => {
+        this.createHeatMap();
         this._mainService.selectPowerPlant(d);
       }
     );
+  }
+
+  getCirclRadius(d: any) {
+    return 3.5 + (14 * (d.capacity_mw / 6809));
   }
 
   bindMapBoxEvents() {
@@ -108,11 +117,14 @@ export class MapComponent implements OnInit {
   }
 
   showHoverTooltip(powerPlant: any) {
-    // TODO:
+    this.toolTipVisible = true;
+    console.log(powerPlant);
+    this.hoveredPowerPlant = powerPlant;
   }
 
   hideHoverTooltip() {
-    // TODO:
+    this.toolTipVisible = false;
+    this.hoveredPowerPlant = null;
   }
 
   registerFilter() {
@@ -127,6 +139,10 @@ export class MapComponent implements OnInit {
       this.createPowerPlantCircles();
       this.render();
     });
+  }
+
+  createHeatMap() {
+
   }
 }
 

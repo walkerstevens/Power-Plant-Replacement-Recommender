@@ -8,3 +8,11 @@
     [center]="[-100.015755, 40.346741]"
     (mapLoad)="mapLoaded($event)">      
 </mgl-map>
+
+<div class="powerplant-tooltip" *ngIf="toolTipVisible" [style.left.px]="project(hoveredPowerPlant).x" [style.top.px]="project(hoveredPowerPlant).y - getCirclRadius(hoveredPowerPlant)">
+    <mat-card class="tooltip-body">
+        <mat-card-title>{{hoveredPowerPlant.name}} | {{hoveredPowerPlant.primary_fuel}}</mat-card-title>
+        <mat-card-subtitle>Capacity: {{hoveredPowerPlant.capacity_mw}} MW</mat-card-subtitle>
+    </mat-card>
+    <div class="tooltip-bottom"></div>
+</div>

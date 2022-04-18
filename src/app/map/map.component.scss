@@ -23,4 +23,35 @@
             font-size: rem;
         }
     }
+
+    .powerplant-tooltip {
+
+        position: absolute;
+        transform: translate(-50%, -100%);
+        top: 0;
+        left: 0;
+        z-index: 4;
+        min-width: 300px;
+        display: flex;
+        flex-direction: column;
+        
+        mat-card-title {
+            font-size: 14pt;
+        }
+
+        mat-card-subtitle {
+            font-size: 12pt;
+        }
+        
+        .tooltip-bottom {
+            width: 0;
+            height: 0;
+            margin: auto;
+            z-index: 10;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            
+            border-top: 10px solid white;
+        }
+    }
 }
