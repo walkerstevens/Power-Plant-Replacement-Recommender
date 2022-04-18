@@ -3,6 +3,7 @@ import { MainServiceService } from '../main-service.service';
 import { MatSelect } from '@angular/material/select';
 import { MatOption } from '@angular/material/core';
 import { FormControl } from '@angular/forms';
+import { take } from 'rxjs/operators'
 
 @Component({
   selector: 'app-sidebar',
@@ -15,7 +16,7 @@ export class SidebarComponent {
   fuelAllSelected = false;
   fuelFilterFormControl = new FormControl();
 
-  radius = 70;
+  radius = 50;
 
   constructor(public mainServiceService: MainServiceService) {}
 
@@ -44,7 +45,7 @@ export class SidebarComponent {
   }
 
   computeRenewableAlternativesClick() {
-    this.mainServiceService.selectedPowerPlant$.subscribe((selectedPowerPlant) => {
+    this.mainServiceService.selectedPowerPlant$.pipe(take(1)).subscribe((selectedPowerPlant) => {
       this.mainServiceService.getRenewableAlternativeLCOEs(selectedPowerPlant.latitude, selectedPowerPlant.longitude, this.radius)
     });
   }

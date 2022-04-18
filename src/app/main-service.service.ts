@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { flatMap, map, Observable, ReplaySubject, Subject } from 'rxjs';
+import { BehaviorSubject, flatMap, map, Observable, ReplaySubject, Subject } from 'rxjs';
 import { dsv } from 'd3'
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
@@ -14,13 +14,13 @@ export class MainServiceService {
   private _powerPlantData: ReplaySubject<any> = new ReplaySubject();
   powerPlantData$ = this._powerPlantData.asObservable();
 
-  private _fuelFilter: ReplaySubject<Array<string>> = new ReplaySubject();
+  private _fuelFilter: BehaviorSubject<any> = new BehaviorSubject(null);
   fuelFilter$ = this._fuelFilter.asObservable();
 
-  private _selectedPowerPlant: ReplaySubject<any> = new ReplaySubject();
+  private _selectedPowerPlant: BehaviorSubject<any> = new BehaviorSubject(null);
   selectedPowerPlant$ = this._selectedPowerPlant.asObservable();
 
-  private _powerPlantLCOEs: ReplaySubject<any> = new ReplaySubject();
+  private _powerPlantLCOEs: BehaviorSubject<Array<any>> = new BehaviorSubject(new Array());
   powerPlantLCOEs$ = this._powerPlantLCOEs.asObservable();
 
   allFuels: Set<string>;
@@ -65,7 +65,7 @@ export class MainServiceService {
     this.allFuels = fuelTypeSet;
   }
 
-  getRenewableAlternativeLCOEs(longtitude: number, latitude: number, radius: number) : Observable<any> {
+  getRenewableAlternativeLCOEs(latitude: number, longtitude: number, radius: number) : Observable<any> {
     let obs = this._httpClient.get(MainServiceService.API_HOST_NAME + `/capacity-factors?latitude=${latitude}&longitude=${longtitude}&radius=${radius}`,
       { 
         headers: new HttpHeaders(
@@ -73,18 +73,21 @@ export class MainServiceService {
             "Content-Type": "application/json"
           })
       })
-      .pipe(map((capacityFactoryInfo: any) => {
-        return {
-          latitude: capacityFactoryInfo.latitude,
-          longtitude: capacityFactoryInfo.longitude,
-          fuelType: capacityFactoryInfo.fuel_type,
-          loce: this.convertToLCOE(capacityFactoryInfo.capacityFactor),
-        }
+      .pipe(map((capacityFactoryInfos: any) => {
+        return capacityFactoryInfos.map((capacityFactoryInfo: any) => {
+          return {
+            latitude: capacityFactoryInfo.latitude,
+            longitude: capacityFactoryInfo.longitude,
+            fuelType: capacityFactoryInfo.fuel_type,
+            loce: this.convertToLCOE(capacityFactoryInfo.capacity_factor),
+          }
+        })
       }));
       
     obs.subscribe((powerPlantLCOEs) => {
-        this._powerPlantLCOEs.next(powerPlantLCOEs)
-      });
+      console.log(powerPlantLCOEs.length)
+      this._powerPlantLCOEs.next(powerPlantLCOEs)
+    });
 
     return obs;
   }

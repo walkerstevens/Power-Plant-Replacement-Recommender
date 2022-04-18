@@ -105,8 +105,9 @@ export class MapComponent implements OnInit {
       .data(this.lcoes)
       .enter()
       .append("rect")
-      .attr("width", 2) // TODO: fix
-      .attr("height", 2) // TODO: fix
+      .attr("width", 10) // TODO: fix
+      .attr("height", 10) // TODO: fix
+      .style("opacity", 0.5)
       .style("fill", "#FF0000") // TODO: fix
   }
 
@@ -148,7 +149,7 @@ export class MapComponent implements OnInit {
       })
       .attr("y", (d: any) => {
         return this.project(d).y;
-      })
+      });
   }
 
   project(d: any) {
@@ -167,6 +168,11 @@ export class MapComponent implements OnInit {
 
   registerFilter() {
     this._mainService.fuelFilter$.subscribe((fuelFilter) => {
+      // If filter is null grab everything
+      if(fuelFilter == null) {
+        return;
+      }
+
       // Get all power plants that match the filter 
       this.powerPlantsFiltered = this.powerPlants.filter((powerPlant: any) => {
         return fuelFilter.includes(powerPlant.primary_fuel)
