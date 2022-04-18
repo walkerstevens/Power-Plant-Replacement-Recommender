@@ -19,9 +19,10 @@ export class MapComponent implements OnInit {
   powerPlantsFiltered: any = [];
   powerPlantCircles: any;
 
-  // Heatmap
+  // LCOE
   lcoes: any = [];
-  lcoeRectangles: any;
+  lcoeCircles: any;
+  radiusCircle: any;
 
   // Tooltip
   toolTipVisible: boolean = false;
@@ -60,7 +61,7 @@ export class MapComponent implements OnInit {
       this.powerPlantsFiltered = powerPlantData;
 
       this.createPowerPlantCircles();
-      this.createLCOEHeatMap();
+      this.createLCOEPoints();
 
       // When user drags or zooms, this needs to re-render d3
       this.bindMapBoxEvents();
@@ -74,10 +75,11 @@ export class MapComponent implements OnInit {
   }
   
   createPowerPlantCircles() {
-    this.powerPlantCircles = this.svg.selectAll("circle")
+    this.powerPlantCircles = this.svg.selectAll(".pp")
       .data(this.powerPlantsFiltered)
       .enter()
       .append("circle")
+      .classed("pp", true)
       .attr("r", this.getCirclRadius)
       .style("cursor", "pointer");
 
@@ -95,20 +97,36 @@ export class MapComponent implements OnInit {
       (pointerEvent: PointerEvent, d: any) => {
         this.selectedPowerPlant = d;
         this._mainService.selectPowerPlant(d);
+        this.createRadiusCircle();
         this.render()
       }
     );
   }
 
-  createLCOEHeatMap() {
-    this.lcoeRectangles = this.svg.selectAll("rect")
-      .data(this.lcoes)
+  createLCOEPoints() {
+
+    let bestLCOES = this.lcoes.sort((a:any,b:any) => {
+      if(a.lcoe < b.lcoe) return 1;
+      if(a.lcoe > b.lcoe) return -1;
+      return 0;
+    }).slice(0, 3);
+
+    this.lcoeCircles = this.svg.selectAll(".lcoe")
+      .data(bestLCOES)
       .enter()
-      .append("rect")
-      .attr("width", 10) // TODO: fix
-      .attr("height", 10) // TODO: fix
-      .style("opacity", 0.5)
-      .style("fill", "#FF0000") // TODO: fix
+      .append("circle")
+      .classed("lcoe", true)
+      .attr("r", 10) // TODO: fix
+      .style("fill", "#00FF00")
+  }
+
+  createRadiusCircle() {
+    this.radiusCircle = this.svg
+      .append("circle")
+      .lower()
+      .classed("radius", true)
+      .style("fill", "#888888")
+      .style("opacity", 0.5);
   }
 
   getCirclRadius(d: any) {
@@ -143,13 +161,20 @@ export class MapComponent implements OnInit {
         return "#FFFFFF";
       });
 
-    this.lcoeRectangles
-      .attr("x", (d: any) => {
+    this.lcoeCircles
+      .attr("cx", (d: any) => {
         return this.project(d).x;
       })
-      .attr("y", (d: any) => {
+      .attr("cy", (d: any) => {
         return this.project(d).y;
       });
+
+    if(this.radiusCircle != null) {
+      this.radiusCircle
+        .attr("cx", this.project(this.selectedPowerPlant).x)
+        .attr("cy", this.project(this.selectedPowerPlant).y)
+        .attr("r", this.map.getZoom() * 10); // TODO: change this to scale with zoom
+    }
   }
 
   project(d: any) {
@@ -179,7 +204,7 @@ export class MapComponent implements OnInit {
       });
 
       // Delete circles
-      this.svg.selectAll("circle").remove();
+      this.svg.selectAll(".pp").remove();
       // Create new ones
       this.createPowerPlantCircles();
       this.render();
@@ -191,10 +216,10 @@ export class MapComponent implements OnInit {
 
       this.lcoes = lcoes;
 
-      // Delete rectangles
-      this.svg.selectAll("rect").remove();
+      // Delete circles
+      this.svg.selectAll(".lcoe").remove();
       // Create new ones
-      this.createLCOEHeatMap();
+      this.createLCOEPoints();
       this.render();
 
     })
