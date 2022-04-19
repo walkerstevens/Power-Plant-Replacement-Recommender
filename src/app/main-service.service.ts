@@ -22,7 +22,10 @@ export class MainServiceService {
 
   private _powerPlantLCOEs: BehaviorSubject<Array<any>> = new BehaviorSubject(new Array());
   powerPlantLCOEs$ = this._powerPlantLCOEs.asObservable();
-
+    
+  private _radius: BehaviorSubject<number> = new BehaviorSubject(50);
+  radius$ = this._radius.asObservable();  
+    
   allFuels: Set<string>;
 
   constructor(private _httpClient: HttpClient) {}

@@ -23,6 +23,7 @@ export class MapComponent implements OnInit {
   lcoes: any = [];
   lcoeCircles: any;
   radiusCircle: any;
+  full_coordinates: any;
 
   // Tooltip
   toolTipVisible: boolean = false;
@@ -97,8 +98,12 @@ export class MapComponent implements OnInit {
       (pointerEvent: PointerEvent, d: any) => {
         this.selectedPowerPlant = d;
         this._mainService.selectPowerPlant(d);
-        this.createRadiusCircle();
-        this.render()
+        if(this.radiusCircle != null) {
+          this.radiusCircle.remove() 
+        }
+        this.svg.selectAll(".lcoe").remove();
+        this.createCircleSquare();
+        this.render();
       }
     );
   }
@@ -119,15 +124,34 @@ export class MapComponent implements OnInit {
       .attr("r", 10) // TODO: fix
       .style("fill", "#00FF00")
   }
-
-  createRadiusCircle() {
+    
+  createCircleSquare() {
+    console.log('this', this)
+    let coordinates: any = get_lat_lon_filters(this.selectedPowerPlant.latitude, this.selectedPowerPlant.longitude, 50)
+    this.full_coordinates = [
+        {
+        "latitude": coordinates[0],
+        "longitude": coordinates[2]
+        },
+        {
+        "latitude": coordinates[0],
+        "longitude": coordinates[3],
+        },
+        {
+        "latitude": coordinates[1],
+        "longitude": coordinates[3]
+        },
+        {
+        "latitude": coordinates[1],
+        "longitude": coordinates[2]
+        }]
+    
     this.radiusCircle = this.svg
-      .append("circle")
+      .append("path")
       .lower()
-      .classed("radius", true)
-      .style("fill", "#888888")
-      .style("opacity", 0.5);
-  }
+      .attr("fill", "#888888")
+      .style("opacity", 0.5);  
+  }  
 
   getCirclRadius(d: any) {
     return 3.5 + (14 * (d.capacity_mw / 6809));
@@ -141,7 +165,7 @@ export class MapComponent implements OnInit {
   }
 
   render() {
-    this.powerPlantCircles
+    this.powerPlantCircles     
       .attr("cx", (d: any) => {
         return this.project(d).x;
       })
@@ -170,10 +194,24 @@ export class MapComponent implements OnInit {
       });
 
     if(this.radiusCircle != null) {
+      let coord_str: string = "M "
+      for (let [i, coord] of this.full_coordinates.entries()) {
+        let projectedCoords = this.project(coord);
+        coord_str += projectedCoords.x; 
+        coord_str += " ";
+        coord_str += projectedCoords.y;
+        if (i === 3) {
+          coord_str += " Z"
+        }
+        else {
+          coord_str += " L" 
+        }
+      }
+      
+      console.log('coord_str:', coord_str)    
+      
       this.radiusCircle
-        .attr("cx", this.project(this.selectedPowerPlant).x)
-        .attr("cy", this.project(this.selectedPowerPlant).y)
-        .attr("r", this.map.getZoom() * 10); // TODO: change this to scale with zoom
+        .attr("d", coord_str)     
     }
   }
 
@@ -242,4 +280,36 @@ dotColor['Biomass'] = "#969696";
 dotColor['Nuclear'] = "#6a51a3";
 dotColor['Storage'] = "#778899";
 dotColor['Other'] = "#C0C0C0";
+
+function get_lat_lon_filters(latitude: any, longitude: any, max_km: any) {
+    // Constants
+    const earth_circumference = 40007.863;
+    const earth_radius = earth_circumference / (2 * Math.PI)
+    const km_per_degree = earth_circumference / 360.0;
+    const deg_per_radian = 57.2958;
+    
+    // Calculate the distance between meridians at the given latitude
+    let km_between_meridians = (earth_circumference * Math.cos(latitude/deg_per_radian)) / 360;
+        
+    // Calculate the range of latitude values allowed based on user selected max_km
+    let lat_plus_minus = max_km / km_per_degree;
+    // Calculate the range of longitude values allowed based on user selected max_km
+    let lon_plus_minus = max_km / km_between_meridians
+    
+    // Array to hold return values
+    let coordinates = []; 
+    // Store min allowed latitude (note latitudes will all be positive)
+    coordinates[0] = latitude - lat_plus_minus;
+    // Store max allowed latitude
+    coordinates[1] = latitude + lat_plus_minus;
+    // Store min allowed longitude (note longitudes will all be negative)
+    coordinates[2] = longitude - lon_plus_minus;
+    // Store max allowed longitude
+    coordinates[3] = longitude + lon_plus_minus;   
+    
+    return coordinates;        
+}  
+
+
+
 
