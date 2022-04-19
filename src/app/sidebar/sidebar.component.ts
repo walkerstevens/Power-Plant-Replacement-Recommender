@@ -20,6 +20,10 @@ export class SidebarComponent {
 
   constructor(public mainServiceService: MainServiceService) {}
 
+  formatLabel(value: number) {
+    return value;
+  }
+
   fuelOptionToggleAllSelection() {
     if (this.fuelAllSelected) {
       this.select.options.forEach((item: MatOption) => item.select());
@@ -47,7 +51,11 @@ export class SidebarComponent {
   computeRenewableAlternativesClick() {
     this.mainServiceService.selectedPowerPlant$.pipe(take(1)).subscribe((selectedPowerPlant) => {
       this.mainServiceService.getRenewableAlternativeLCOEs(selectedPowerPlant.latitude, selectedPowerPlant.longitude, this.radius)
-      console.log('radius_this:', this)
     });
+  }
+
+  radiusChange(radius: any) {
+    this.radius = radius.value;
+    this.mainServiceService.setRadius(this.radius);
   }
 }

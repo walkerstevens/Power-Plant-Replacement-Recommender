@@ -106,4 +106,9 @@ export class MainServiceService {
   setFuelFilter(fuelFilter: Array<string>) {
     this._fuelFilter.next(fuelFilter);
   }
+
+  setRadius(radius: number) {
+    console.log(radius);
+    this._radius.next(radius);
+  }
 }

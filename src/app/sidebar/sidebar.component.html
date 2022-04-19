@@ -40,11 +40,20 @@
                 </ng-container>
                 <mat-divider inset></mat-divider>
                 <form>
-                    <mat-form-field appearance="fill">
-                        <mat-label>Radius</mat-label>
-                        <input matInput name="radius" placeholder="Radius (km)" min="0" max="200" [(ngModel)]="radius" />
-                        <span style="margin-top: 5px; position: absolute; right: 0;">km</span>
-                    </mat-form-field>
+                    <div>
+                        <span>Search Grid Size: {{radius}} km x {{radius}} km </span>
+                    </div>
+                    <mat-slider
+
+                        tickInterval="50"
+                        step="5"
+                        min="10"
+                        max="100"
+                        aria-label="units"
+                        value="50"
+                        (change)="radiusChange($event)"
+                        style="width: 100%;">
+                    </mat-slider>
                     <button mat-flat-button class="compute-button" color="primary" (click)="computeRenewableAlternativesClick()">Compute Renewable Alternatives</button>
                 </form>
             </div>

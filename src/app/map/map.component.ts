@@ -24,6 +24,7 @@ export class MapComponent implements OnInit {
   lcoeCircles: any;
   radiusCircle: any;
   full_coordinates: any;
+  radius = 500;
 
   // Tooltip
   toolTipVisible: boolean = false;
@@ -72,6 +73,8 @@ export class MapComponent implements OnInit {
       this.registerFilter();
       // Register LCOE computation callback
       this.registerLCOEComputation();
+      // Register radius callback
+      this.registerRadiusCallback();
     });
   }
   
@@ -114,7 +117,7 @@ export class MapComponent implements OnInit {
       if(a.lcoe < b.lcoe) return 1;
       if(a.lcoe > b.lcoe) return -1;
       return 0;
-    }).slice(0, 3);
+    }).slice(0, 1);
 
     this.lcoeCircles = this.svg.selectAll(".lcoe")
       .data(bestLCOES)
@@ -125,27 +128,7 @@ export class MapComponent implements OnInit {
       .style("fill", "#00FF00")
   }
     
-  createCircleSquare() {
-    console.log('this', this)
-    let coordinates: any = get_lat_lon_filters(this.selectedPowerPlant.latitude, this.selectedPowerPlant.longitude, 50)
-    this.full_coordinates = [
-        {
-        "latitude": coordinates[0],
-        "longitude": coordinates[2]
-        },
-        {
-        "latitude": coordinates[0],
-        "longitude": coordinates[3],
-        },
-        {
-        "latitude": coordinates[1],
-        "longitude": coordinates[3]
-        },
-        {
-        "latitude": coordinates[1],
-        "longitude": coordinates[2]
-        }]
-    
+  createCircleSquare() {    
     this.radiusCircle = this.svg
       .append("path")
       .lower()
@@ -194,6 +177,26 @@ export class MapComponent implements OnInit {
       });
 
     if(this.radiusCircle != null) {
+
+      let coordinates: any = get_lat_lon_filters(this.selectedPowerPlant.latitude, this.selectedPowerPlant.longitude, this.radius)
+      this.full_coordinates = [
+          {
+          "latitude": coordinates[0],
+          "longitude": coordinates[2]
+          },
+          {
+          "latitude": coordinates[0],
+          "longitude": coordinates[3],
+          },
+          {
+          "latitude": coordinates[1],
+          "longitude": coordinates[3]
+          },
+          {
+          "latitude": coordinates[1],
+          "longitude": coordinates[2]
+          }]
+
       let coord_str: string = "M "
       for (let [i, coord] of this.full_coordinates.entries()) {
         let projectedCoords = this.project(coord);
@@ -206,9 +209,7 @@ export class MapComponent implements OnInit {
         else {
           coord_str += " L" 
         }
-      }
-      
-      console.log('coord_str:', coord_str)    
+      }  
       
       this.radiusCircle
         .attr("d", coord_str)     
@@ -260,6 +261,13 @@ export class MapComponent implements OnInit {
       this.createLCOEPoints();
       this.render();
 
+    })
+  }
+
+  registerRadiusCallback() {
+    this._mainService.radius$.subscribe((radius: number) => {
+      this.radius = radius;
+      this.render();
     })
   }
 }
