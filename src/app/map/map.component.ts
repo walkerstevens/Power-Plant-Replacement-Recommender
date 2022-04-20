@@ -124,8 +124,11 @@ export class MapComponent implements OnInit {
       .enter()
       .append("circle")
       .classed("lcoe", true)
-      .attr("r", 10) // TODO: fix
+      .attr("r", () => {
+        return this.getCirclRadius(this.selectedPowerPlant);
+      }) // TODO: fix
       .style("fill", "#00FF00")
+      .style("stroke", "#000000")
   }
     
   createCircleSquare() {    

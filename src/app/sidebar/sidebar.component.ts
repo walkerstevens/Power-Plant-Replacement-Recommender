@@ -16,9 +16,30 @@ export class SidebarComponent {
   fuelAllSelected = false;
   fuelFilterFormControl = new FormControl();
 
+  selectedPowerPlant: any = null;
+  recommendedPlant: any = null;
+
   radius = 50;
 
-  constructor(public mainServiceService: MainServiceService) {}
+  constructor(public mainServiceService: MainServiceService) {
+
+    this.mainServiceService.selectedPowerPlant$.subscribe((selectedPowerPlant) => {
+      this.selectedPowerPlant = selectedPowerPlant;
+      this.recommendedPlant = null;
+    })
+
+    this.mainServiceService.powerPlantLCOEs$.subscribe((lcoes) => {
+      if(this.selectedPowerPlant != null) {
+        this.recommendedPlant = lcoes.sort((a:any,b:any) => {
+          if(a.lcoe < b.lcoe) return 1;
+          if(a.lcoe > b.lcoe) return -1;
+          return 0;
+        })[0];
+      }
+    })
+  }
+
+  
 
   formatLabel(value: number) {
     return value;
@@ -58,4 +79,5 @@ export class SidebarComponent {
     this.radius = radius.value;
     this.mainServiceService.setRadius(this.radius);
   }
+  
 }

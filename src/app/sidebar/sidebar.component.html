@@ -31,8 +31,8 @@
         <mat-card-title>Power Plant Info</mat-card-title>
         <mat-divider inset></mat-divider>
         <mat-card-content>
-            <div *ngIf="mainServiceService.selectedPowerPlant$ | async as powerPlantInfo; else loading">
-                <ng-container *ngFor="let item of powerPlantInfo | keyvalue">
+            <div *ngIf="this.selectedPowerPlant else loading">
+                <ng-container *ngFor="let item of this.selectedPowerPlant | keyvalue">
                     <label>{{item.key}}</label>
                     <p>
                         {{item.value}}
@@ -63,17 +63,30 @@
         </mat-card-content>
     </mat-card>
     
-    <!--TODO: Edit this to recommend power plants-->
-    <mat-card>
+    <mat-card *ngIf="recommendedPlant">
         <mat-card-title>Plant Recommendation</mat-card-title>
         <mat-divider inset></mat-divider>
         <mat-card-content>
-            <div *ngIf="mainServiceService.selectedPowerPlant$ | async as powerPlantInfo; else loadingRec">
-                <label>TODO: Add recommended plant</label>
-            </div>
-            <ng-template #loadingRec>
-                Select a power plant for recommendation
-            </ng-template>
+            <label>Plant Type</label>
+            <p>
+                {{recommendedPlant.primaryFuelRecommendation}}
+            </p>
+            <label>Latitude</label>
+            <p>
+                {{recommendedPlant.latitude}}
+            </p>
+            <label>Longitude</label>
+            <p>
+                {{recommendedPlant.longitude}}
+            </p>
+            <label>Yearly profit / MW</label>
+            <p>
+                {{recommendedPlant.yearlyProfitPerMW}}
+            </p>
+            <label>Cents / Kwh</label>
+            <p>
+                {{recommendedPlant.centsPerKwh}}
+            </p>
         </mat-card-content>
     </mat-card>
 </div>
