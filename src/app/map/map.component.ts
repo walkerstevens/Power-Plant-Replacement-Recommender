@@ -113,14 +113,14 @@ export class MapComponent implements OnInit {
 
   createLCOEPoints() {
 
-    let bestLCOES = this.lcoes.sort((a:any,b:any) => {
+    let bestLCOE = this.lcoes.sort((a:any,b:any) => {
       if(a.lcoe < b.lcoe) return 1;
       if(a.lcoe > b.lcoe) return -1;
       return 0;
     }).slice(0, 1);
 
     this.lcoeCircles = this.svg.selectAll(".lcoe")
-      .data(bestLCOES)
+      .data(bestLCOE)
       .enter()
       .append("circle")
       .classed("lcoe", true)

@@ -58,7 +58,7 @@ export class MainServiceService {
     // Gets all fuel names
     for(let powerPlant of powerPlantData) {
       // Fuel names can be in multiple columns in data
-      for(let propertyWithFuelName of ["primary_fuel", "other_fuel1", "other_fuel2", "other_fuel3"]) {
+      for(let propertyWithFuelName of ["primary_fuel"]) {
         let fuelName = powerPlant[propertyWithFuelName];
         if(fuelName != null && fuelName != "") {
           fuelTypeSet.add(fuelName);
@@ -81,22 +81,18 @@ export class MainServiceService {
           return {
             latitude: capacityFactoryInfo.latitude,
             longitude: capacityFactoryInfo.longitude,
-            fuelType: capacityFactoryInfo.fuel_type,
-            loce: this.convertToLCOE(capacityFactoryInfo.capacity_factor),
+            primaryFuelRecommendation: capacityFactoryInfo.primary_fuel_recommendation,
+            yearlyProfitPerMW: capacityFactoryInfo.yearly_profit_per_mw,
+            centsPerKwh: capacityFactoryInfo.cents_per_kwh
           }
         })
       }));
       
     obs.subscribe((powerPlantLCOEs) => {
-      console.log(powerPlantLCOEs.length)
       this._powerPlantLCOEs.next(powerPlantLCOEs)
     });
 
     return obs;
-  }
-
-  convertToLCOE(capcityFactor: number) {
-    return capcityFactor; // TODO: fix
   }
 
   selectPowerPlant(powerPlant: any) {
@@ -108,7 +104,6 @@ export class MainServiceService {
   }
 
   setRadius(radius: number) {
-    console.log(radius);
     this._radius.next(radius);
   }
 }
