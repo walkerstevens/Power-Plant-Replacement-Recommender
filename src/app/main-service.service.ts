@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, flatMap, map, Observable, ReplaySubject, Subject } from 'rxjs';
 import { dsv } from 'd3'
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root'
@@ -26,9 +27,10 @@ export class MainServiceService {
   private _radius: BehaviorSubject<number> = new BehaviorSubject(50);
   radius$ = this._radius.asObservable();  
     
-  allFuels: Set<string>;
+  private _allFuels: BehaviorSubject<Set<string>> = new BehaviorSubject(new Set());
+  allFuels$ = this._allFuels.asObservable();
 
-  constructor(private _httpClient: HttpClient) {}
+  constructor(private _httpClient: HttpClient, private _snackBar: MatSnackBar) {}
 
   loadPowerPlantData() : Observable<any> {
     dsv(",", "./dataset/us_powerplants.csv",
@@ -65,7 +67,7 @@ export class MainServiceService {
         }
       }
     }
-    this.allFuels = fuelTypeSet;
+    this._allFuels.next(fuelTypeSet);
   }
 
   getRenewableAlternativeLCOEs(latitude: number, longtitude: number, radius: number) : Observable<any> {
@@ -77,6 +79,9 @@ export class MainServiceService {
           })
       })
       .pipe(map((capacityFactoryInfos: any) => {
+        if(capacityFactoryInfos.length == 0) {
+          this._snackBar.open("Could not find a suggestion for this power plant.", "Dismiss");
+        }
         return capacityFactoryInfos.map((capacityFactoryInfo: any) => {
           return {
             latitude: capacityFactoryInfo.latitude,
