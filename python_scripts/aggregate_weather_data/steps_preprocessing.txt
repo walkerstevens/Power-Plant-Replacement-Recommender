@@ -1,0 +1,20 @@
+Step 1
+- Download s3://nrel-pds-nsrdb/v3/tmy/nsrdb_tmy-2020.h5 a storage or mount the remote endpoint as a local drive
+
+Step 2: Get the Powerplant data (aggregate_tmy_powerplant_coordinates.ipynb)
+- Retrive coordinates of all solar powerplants in the US: 3274 solar plants
+    - Yearly mean&std averages : us_powerplants_new_solar.csv
+    - Yearly budket average of wind/temp data: us_powerplants_new_solar2.csv
+- Retrive coordinates of all wind powerplants in the US: 1137 wind plants
+    - Yearly mean&std averages : us_powerplants_new_wind.csv
+    - Yearly budket average of wind/temp data: us_powerplants_new_wind2.csv
+=> Used to train solar_model and wind_model
+
+Step 3: Aggregate hourly TMY data for yearly averages, yearly std, and yearly averages of bucketed wind/temperature values (aggregate_tmy_all_coordinates.ipynb)
+- Retrive all USA coordinates based on 4km x 4km gridd: 546K data points
+- Iterate through all 546K USA coordinates, for each data point, aggregate 8760 hourly data points to calculate
+    - Yearly mean average : yearly_variables_us_coordinates_mean.csv
+    - Yearly std average: yearly_variables_us_coordinates_std.csv
+    - Yearly budket average of wind/temp data: yearly_variables_us_coordinates_others.csv
+
+Step 4: Concatenate three datasets into one (concatenate_three_tmy_datasets.ipynb)
