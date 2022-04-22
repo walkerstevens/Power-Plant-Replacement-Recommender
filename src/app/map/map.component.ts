@@ -1,5 +1,4 @@
 import { ApplicationRef, Component, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Map } from 'mapbox-gl';
 import { MainServiceService } from '../../app/main-service.service'
 import { select, scaleLinear } from 'd3';
@@ -34,7 +33,7 @@ export class MapComponent implements OnInit {
   selectedPowerPlant: any;
   selectedPowerPlantCircle: any;
 
-  constructor(private _applicationRef: ApplicationRef, private _snackBar: MatSnackBar, private _mainService: MainServiceService) { }
+  constructor(private _applicationRef: ApplicationRef, private _mainService: MainServiceService) { }
 
   ngOnInit(): void { }
 
@@ -114,8 +113,8 @@ export class MapComponent implements OnInit {
   createLCOEPoints() {
 
     let bestLCOE = this.lcoes.sort((a:any,b:any) => {
-      if(a.lcoe < b.lcoe) return 1;
-      if(a.lcoe > b.lcoe) return -1;
+      if(a.centsPerKwh < b.centsPerKwh) return -1;
+      if(a.centsPerKwh > b.centsPerKwh) return 1;
       return 0;
     }).slice(0, 1);
 

@@ -19,6 +19,8 @@ export class SidebarComponent {
   selectedPowerPlant: any = null;
   recommendedPlant: any = null;
 
+  allFuels : Set<string>;
+
   radius = 50;
 
   constructor(public mainServiceService: MainServiceService) {
@@ -31,15 +33,17 @@ export class SidebarComponent {
     this.mainServiceService.powerPlantLCOEs$.subscribe((lcoes) => {
       if(this.selectedPowerPlant != null) {
         this.recommendedPlant = lcoes.sort((a:any,b:any) => {
-          if(a.lcoe < b.lcoe) return 1;
-          if(a.lcoe > b.lcoe) return -1;
+          if(a.centsPerKwh < b.centsPerKwh) return -1;
+          if(a.centsPerKwh > b.centsPerKwh) return 1;
           return 0;
         })[0];
       }
     })
-  }
 
-  
+    this.mainServiceService.allFuels$.subscribe((allFuels: Set<string>) => {
+      this.allFuels = allFuels;
+    });
+  }
 
   formatLabel(value: number) {
     return value;
