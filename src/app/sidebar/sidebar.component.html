@@ -92,21 +92,23 @@
             <p>
                 {{recommendedPlant.primaryFuelRecommendation}}
             </p>
-            <label>Lat/Long <mat-icon class="help" matTooltip="Lattitude and Longitude of the plant in degrees" matTooltipPosition="above" matTooltipClass="tooltip">help</mat-icon></label>
+            <label>Lat/Long <mat-icon class="help" matTooltip="Lattitude and Longitude of the plant in degrees." matTooltipPosition="above" matTooltipClass="tooltip">help</mat-icon></label>
             <p>
                 ({{recommendedPlant.latitude}}, {{recommendedPlant.longitude}})
             </p>
-            <label>Cost (cents per kwh)</label>
+            <label>Electricity Generation Cost (cents per kwh)</label>
             <p>
                 {{recommendedPlant.centsPerKwh | number : '1.2-2'}} &#162;/kwh;
             </p>
-            <label>Yearly profit</label>
+            <label>Installation cost</label>
+            <p>
+                {{(((+(recommendedPlant.primaryFuelRecommendation === "Solar")) * 1796000) + 
+                ((+(recommendedPlant.primaryFuelRecommendation === "Wind")) * 2000000)) * 
+                selectedPowerPlant.capacity_mw | currency}}
+            </p>
+            <label>Yearly Net Income <mat-icon class="help" matTooltip="Assumes electricity is sold at the national average 11.34 cents per kilowatthour." matTooltipPosition="above" matTooltipClass="tooltip">help</mat-icon></label>
             <p>
                 {{recommendedPlant.yearlyProfitPerMW * selectedPowerPlant.capacity_mw | currency}}
-            </p>
-            <label>Yearly cost</label>
-            <p>
-                {{recommendedPlant.centsPerKwh * (selectedPowerPlant.capacity_mw * 1000) / 100 | currency}}
             </p>
         </mat-card-content>
     </mat-card>
