@@ -1,0 +1,12 @@
+name: train_model
+channels:
+  - conda-forge
+  - anaconda
+dependencies:
+  - jupyter
+  - pandas
+  - seaborn
+  - numpy
+  - xgboost
+  - matplotlib
+  - scikit-learn
