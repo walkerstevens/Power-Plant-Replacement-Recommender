@@ -10,3 +10,5 @@ dependencies:
   - xgboost
   - matplotlib
   - scikit-learn
+  - h5py
+  - scipy
