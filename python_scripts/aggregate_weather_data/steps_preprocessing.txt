@@ -1,20 +1,21 @@
 Step 1
 - Download s3://nrel-pds-nsrdb/v3/tmy/nsrdb_tmy-2020.h5 a storage or mount the remote endpoint as a local drive
 
-Step 2: Get the Powerplant data (aggregate_tmy_powerplant_coordinates.ipynb)
-- Retrive coordinates of all solar powerplants in the US: 3274 solar plants
+Step 2: Get the yearly aggregateed TMY data of all USA Renewable Energy Powerplants, for Solar and Wind types => aggregate_tmy_powerplant_coordinates.ipynb
+- For 3274 SOLAR powerplants
     - Yearly mean&std averages : us_powerplants_new_solar.csv
-    - Yearly budket average of wind/temp data: us_powerplants_new_solar2.csv
-- Retrive coordinates of all wind powerplants in the US: 1137 wind plants
+    - Yearly averages of bucketed wind/temp data: us_powerplants_new_solar2.csv
+- For 1137 WIND powerplants
     - Yearly mean&std averages : us_powerplants_new_wind.csv
-    - Yearly budket average of wind/temp data: us_powerplants_new_wind2.csv
-=> Used to train solar_model and wind_model
+    - Yearly averages of bucketed wind/temp data: us_powerplants_new_wind2.csv
+=> 10K USA powerplants were filtered out of 35K global powerplants
+=> Used to train capacity factor prediction model for solar and wind, respectively
 
-Step 3: Aggregate hourly TMY data for yearly averages, yearly std, and yearly averages of bucketed wind/temperature values (aggregate_tmy_all_coordinates.ipynb)
-- Retrive all USA coordinates based on 4km x 4km gridd: 546K data points
-- Iterate through all 546K USA coordinates, for each data point, aggregate 8760 hourly data points to calculate
-    - Yearly mean average : yearly_variables_us_coordinates_mean.csv
-    - Yearly std average: yearly_variables_us_coordinates_std.csv
-    - Yearly budket average of wind/temp data: yearly_variables_us_coordinates_others.csv
+Step 3: Get the yearly aggregated data for ALL US 4km x 4km grids: means, stds, and bucketed wind/temperature data => aggregate_tmy_all_coordinates.ipynb)
+- For 546K in-land USA coordinates filtered from 2M coordinates including territorial water (all USA coordinates based on 4km x 4km grid)
+- Aggregate 8760 hourly data into a yearly average value for 24 TMY weather features,
+    - Yearly mean averages : yearly_variables_us_coordinates_mean.csv
+    - Yearly std averages: yearly_variables_us_coordinates_std.csv
+    - Yearly averages of bucketed wind/temp data: yearly_variables_us_coordinates_others.csv
 
 Step 4: Concatenate three datasets into one (concatenate_three_tmy_datasets.ipynb)

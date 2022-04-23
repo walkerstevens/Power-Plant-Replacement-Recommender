@@ -1,0 +1,14 @@
+Year,TMY/TGY/TDY
+Month,1-12
+Day,"1-28, 1-30, or 1-31"
+Hour,1-23
+Minute,0
+Dew Point,Degree C
+DHI,Watt per square meter
+DNI,Watt per square meter
+GHI,Watt per square meter
+Temperature,Degree C
+Pressure,Millibar
+Wind Direction,Degrees
+Wind Speed,Meter per second
+Surface Albedo,Ratio
